@@ -1,0 +1,493 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
+		<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<meta name="mobileoptimized" content="0"/>
+		<title>特种兵</title>
+		<meta name="description" content="特种兵壳壳上班记" />
+  		<meta name="Keywords" content="特种兵壳壳上班记" />
+  		<link rel="stylesheet" href="../mycss/core.css">
+  		<style type="text/css">
+	  		@keyframes loadingmascot
+			{
+				0%   {background-image:url(images/loading1.png);}
+				50%   {background-image:url(images/loading2.png);}
+				100%   {background-image:url(images/loading3.png);}
+			}
+		  		
+			.livecoco{
+				width:200px;
+				height:250px;
+				background-size:100% 100%;
+				background-repeat:no-repeat;
+				animation: livingcocobg 1.5s ease 0s infinite alternate;
+			}
+			@keyframes livingcocobg
+			{
+				0%   {background-image:url(images/coco1.png);}
+				85%   {background-image:url(images/coco1.png);}
+				90%   {background-image:url(images/coco2.png);}
+				95%   {background-image:url(images/coco3.png);}
+				100%   {background-image:url(images/coco4.png);}
+			}
+
+			.showcoco{
+				animation: showingcoco 1s ease-in 0s forwards;
+			}
+			@keyframes showingcoco
+			{
+				0%   {bottom:100%;}
+				70%   {bottom:30%;transform:rotate(30deg);}
+				90%   {bottom:35%;transform:rotate(5deg);}
+				100%   {bottom:30%;transform:rotate(0deg);}
+			}
+
+			.notworkcoco{
+				width:240px;
+				height:170px;
+				background-size:240px 170px;
+				background-repeat:no-repeat;
+				animation: notworkingcoco 1.5s ease 0s infinite alternate;
+			}
+			@keyframes notworkingcoco
+			{
+				0%   {background-image:url(images/notworkinganimate1.png);}
+				65%   {background-image:url(images/notworkinganimate1.png);}
+				70%   {background-image:url(images/notworkinganimate2.png);}
+				75%   {background-image:url(images/notworkinganimate3.png);}
+				80%   {background-image:url(images/notworkinganimate4.png);}
+				85%   {background-image:url(images/notworkinganimate3.png);}
+				90%   {background-image:url(images/notworkinganimate2.png);}
+				100%   {background-image:url(images/notworkinganimate1.png);}
+			}
+			
+			.showbeach{
+				animation: showingbeach 0.8s ease-out 0s forwards;
+			}
+			@keyframes showingbeach
+			{
+				0%   {top:100%;}
+				75%   {top:100px;}
+				90%   {top:140px;}
+				100%   {top:120px;}
+			}
+			
+			.shining1{
+				position:absolute;
+				bottom:60%;
+				right:40px;
+				animation: shiningstar 1s ease 0s infinite alternate;
+			}
+			.shining2{
+				position:absolute;
+				bottom:210px;
+				right:40%;
+				animation: shiningstar 1.2s ease 0.5s infinite alternate;
+			}
+			.shining3{
+				position:absolute;
+				top:100px;
+				right:50px;
+				animation: shiningstar 1.4s ease 1s infinite alternate;
+			}
+			@keyframes shiningstar
+			{
+				0%   {height:1px;}
+				50%   {height:1px;}
+				100%   {height:40px;}
+			}
+
+			.floatcloud{
+				animation: floatingcloud 30s linear 0.8s forwards;
+			}
+			@keyframes floatingcloud
+			{
+				0%   {left:-20%;}
+				10%   {opacity:1;left:-30%;}
+				100%   {opacity:1;left:-100%;}
+			}
+
+			.flybirdbig{
+				animation: flyingbirdbig 30s ease 0s infinite;
+			}
+			@keyframes flyingbirdbig
+			{
+				0%   {top:30px;left:10px;}
+				20%   {top:25px;left:50%;}
+				40%   {top:50px;left:90%;}
+				60%   {top:150px;left:50%;}
+				80%   {top:200px;left:30%;}
+				100%   {top:30px;left:10px;}
+			}
+
+			.flybirdsmall{
+				animation: flyingbirdsmall 5s ease 0s infinite alternate;
+			}
+			@keyframes flyingbirdsmall
+			{
+				0%   {top:20px;left:60%;}
+				100%   {top:60px;left:50%;}
+			}
+
+		</style>
+		<script type="text/javascript" src="../3rdjs/jquery-3.3.1.min.js"></script>
+		<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+		<script type="text/javascript" src="../myjs/core.js"></script>
+		<script type="text/javascript">
+			function init(data){
+				if ($("#taskbg").length==0){
+					$("body").append("<img id='taskbg' class='pop tasklist width320center' src='images/taskbg.png'/>");
+					$("body").append("<img id='task0small' class='tasklist' style='position: absolute; display:none;height: 80px; left: 50%; top:50%;transform: translateX(10px) translateY(-180px);' src='images/task0small.png'/>");
+					$("body").append("<img id='task0gsmall' class='tasklist' style='position: absolute; display:none;height: 80px; left: 50%; top:50%;transform: translateX(10px) translateY(-180px);' src='images/task0gsmall.png'/>");
+					$("body").append("<img id='task0numbg' class='tasklist' style='position: absolute; display:none;height: 20px; left: 50%; top:50%;transform: translateX(110px) translateY(-120px);' src='images/num.png'/>");
+					$("body").append("<img id='task0tick' class='tasklist' style='position: absolute; display:none;height: 30px; left: 50%; top:50%;transform: translateX(110px) translateY(-180px);' src='images/tick.png'/>");
+					$("body").append("<div id='task0num' class='tasklist' style='position: absolute; display:none;font-size: 10px; height: 20px; width: 20px; left: 50%; top:50%;transform: translateX(110px) translateY(-120px);line-height: 20px;color: white;'></div>");
+					
+					$("body").append("<img id='task1small' class='tasklist' style='position: absolute; display:none;height: 80px; right: 50%; top:50%;transform: translateX(-10px) translateY(-75px);' src='images/task1small.png'/>");
+					$("body").append("<img id='task1gsmall' class='tasklist' style='position: absolute; display:none;height: 80px; right: 50%; top:50%;transform: translateX(-10px) translateY(-75px);' src='images/task1gsmall.png'/>");
+					$("body").append("<img id='task1numbg' class='tasklist' style='position: absolute; display:none;height: 20px; right: 50%; top:50%;transform: translateX(-8px) translateY(-20px);' src='images/num.png'/>");
+					$("body").append("<img id='task1tick' class='tasklist' style='position: absolute; display:none;height: 30px; right: 50%; top:50%;transform: translateX(5px) translateY(-80px);' src='images/tick.png'/>");
+					$("body").append("<div id='task1num' class='tasklist' style='position: absolute; display:none;font-size:10px;height: 20px; top:50%;width:20px;right: 50%; line-height:20px;color:white;transform: translateX(-8px) translateY(-20px);'></div>");
+
+					$("body").append("<img id='task2small' class='tasklist' style='position: absolute; display:none;height: 80px; left: 50%; top:50%;transform: translateX(10px) translateY(-75px);' src='images/task2small.png'/>");
+					$("body").append("<img id='task2gsmall' class='tasklist' style='position: absolute; display:none;height: 80px; left: 50%; top:50%;transform: translateX(10px) translateY(-75px);' src='images/task2gsmall.png'/>");
+					$("body").append("<img id='task2numbg' class='tasklist' style='position: absolute; display:none;height: 20px; left: 50%; top:50%;transform: translateX(110px) translateY(-20px);' src='images/num.png'/>");
+					$("body").append("<img id='task2tick' class='tasklist' style='position: absolute; display:none;height: 30px; left: 50%; top:50%;transform: translateX(110px) translateY(-80px);' src='images/tick.png'/>");
+					$("body").append("<div id='task2num' class='tasklist' style='position: absolute; display:none;font-size:10px;height: 20px; top:50%;width:20px;left: 50%; transform: translateX(110px) translateY(-20px);line-height:20px;color:white;'></div>");
+
+					$("body").append("<img id='task3small' class='tasklist' style='position: absolute; display:none;height: 80px; right: 50%; top:50%;transform: translateX(-10px) translateY(26px);' src='images/task3small.png'/>");
+					$("body").append("<img id='task3gsmall' class='tasklist' style='position: absolute; display:none;height: 80px; right: 50%; top:50%;transform: translateX(-10px) translateY(26px);' src='images/task3gsmall.png'/>");
+					$("body").append("<img id='task3numbg' class='tasklist' style='position: absolute; display:none;height: 20px; right: 50%; top:50%;transform: translateX(-8px) translateY(82px);' src='images/num.png'/>");
+					$("body").append("<img id='task3tick' class='tasklist' style='position: absolute; display:none;height: 30px; right: 50%; top:50%;transform: translateX(5px) translateY(21px);' src='images/tick.png'/>");
+					$("body").append("<div id='task3num' class='tasklist' style='position: absolute; display:none;font-size:10px;height: 20px; top:50%;width:20px;right: 50%; transform: translateX(-8px) translateY(82px);line-height:20px;color:white;'></div>");
+
+					$("body").append("<img id='task4small' class='tasklist' style='position: absolute; display:none;height: 80px; left: 50%; top:50%;transform: translateX(10px) translateY(26px);' src='images/task4small.png'/>");
+					$("body").append("<img id='task4gsmall' class='tasklist' style='position: absolute; display:none;height: 80px; left: 50%; top:50%;transform: translateX(10px) translateY(26px);' src='images/task4gsmall.png'/>");
+					$("body").append("<img id='task4numbg' class='tasklist' style='position: absolute; display:none;height: 20px; left: 50%; top:50%;transform: translateX(110px) translateY(82px);' src='images/num.png'/>");
+					$("body").append("<img id='task4tick' class='tasklist' style='position: absolute; display:none;height: 30px; left: 50%; top:50%;transform: translateX(110px) translateY(21px);' src='images/tick.png'/>");
+					$("body").append("<div id='task4num' class='tasklist' style='position: absolute; display:none;font-size:10px;height: 20px; top:50%;width:20px;left: 50%; transform: translateX(110px) translateY(82px);line-height:20px;color:white;'></div>");
+
+					$("body").append("<img id='task5small' class='tasklist' style='position: absolute; display:none;height: 80px; right: 50%; top:50%;transform: translateX(-10px) translateY(125px);' src='images/task5small.png'/>");
+					$("body").append("<img id='task5gsmall' class='tasklist' style='position: absolute; display:none;height: 80px; right: 50%; top:50%;transform: translateX(-10px) translateY(125px);' src='images/task5gsmall.png'/>");
+					$("body").append("<img id='task5numbg' class='tasklist' style='position: absolute; display:none;height: 20px; right: 50%; top:50%;transform: translateX(-8px) translateY(183px);' src='images/num.png'/>");
+					$("body").append("<img id='task5tick' class='tasklist' style='position: absolute; display:none;height: 30px; right: 50%; top:50%;transform: translateX(5px) translateY(123px);' src='images/tick.png'/>");
+					$("body").append("<div id='task5num' class='tasklist' style='position: absolute; display:none;font-size:10px;height: 20px; top:50%;width:20px;right: 50%; transform: translateX(-8px) translateY(183px);line-height:20px;color:white;'></div>");
+
+					$("body").append("<img id='task6small' class='tasklist' style='position: absolute; display:none;height: 80px; left: 50%; top:50%;transform: translateX(10px) translateY(125px);' src='images/task6small.png'/>");
+					$("body").append("<img id='task6gsmall' class='tasklist' style='position: absolute; display:none;height: 80px; left: 50%; top:50%;transform: translateX(10px) translateY(125px);' src='images/task6gsmall.png'/>");
+					$("body").append("<img id='task6numbg' class='tasklist' style='position: absolute; display:none;height: 20px; left: 50%; top:50%;transform: translateX(110px) translateY(183px);' src='images/num.png'/>");
+					$("body").append("<img id='task6tick' class='tasklist' style='position: absolute; display:none;height: 30px; left: 50%; top:50%;transform: translateX(110px) translateY(123px);' src='images/tick.png'/>");
+					$("body").append("<div id='task6num' class='tasklist' style='position: absolute; display:none;font-size:10px;height: 20px; top:50%;width:20px;left: 50%; transform: translateX(110px) translateY(183px);line-height:20px;color:white;'></div>");
+
+					$("body").append("<img id='pic' class='tasklist' style='display:none;position: absolute; width: 80px; height: 80px; border: 2px solid white; border-radius: 40px; left: 50%; top:50%;transform: translateX(-50%) translateY(-270px);' src='images/logo.png'/>");
+					$("body").append("<img id='tasklist38' class='tasklist' style='display:none;position: absolute; width: 80px; height: 80px; right: 50%; top:50%;transform: translateX(-90px) translateY(-270px);' src='images/tasklist38.png'/>");
+
+					$("body").append("<img id='bigprize' class='tasklist' style='display:none;position:absolute;height:50px;left:50%;top:50%;transform: translateX(-50%) translateY(220px);' src='images/bigprize.png'/>");
+					$("body").append("<img id='bigprizeg' class='tasklist' style='display:none;position:absolute;height:50px;left:50%;top:50%;transform: translateX(-50%) translateY(220px);' src='images/bigprizeg.png'/>");
+				}
+				imagesloaded(function(){
+					if (data.pools.length==0){
+						if ($("#prized").length==0){
+							$("body").append("<img id='prized' class='pop msg' src='images/prized.png'/>");
+						}
+						imagesloaded(function(){
+							$("#logo").removeClass("pop");
+							$("#logo").css("top","5px");
+							$("#logo").css("right","5px");
+							$("#logo").css("width","70px");
+							$("#logo").css("left","");
+							$("#logo").css("height","");
+							$("#logo").css("transform","");
+							$("#logo").fadeIn(1000);
+							
+							popshow("prized");
+							$("#tasklist").show();
+						});
+					} else {
+						constructscene();
+					}
+					$("#tasklist").click(function(){
+						$(this).hide();
+						$(".tasklist").css("z-index","10001");
+						$(".tasklist").hide();
+						$(".hongbao").hide();
+						$("#share").hide();
+						$(".notworking").hide();
+						popshow("taskbg");
+						
+						var data = JSON.parse(sessionStorage.getItem("data-initwxjssdk"));
+						if (sessionStorage.getItem("data-init")!=null){
+							data = JSON.parse(sessionStorage.getItem("data-init"));
+						}
+						if (sessionStorage.getItem("data-after7taskhbcall")!=null){
+							data = JSON.parse(sessionStorage.getItem("data-after7taskhbcall"));
+						} else if (sessionStorage.getItem("data-after1taskhbcall")!=null){
+							post(null,{},refreshtasklist);
+							return;
+						}
+						refreshtasklist(data);
+					});
+					$("#share").click(function(){
+						$("#tasklist").css("top","");
+						$("#tasklist").css("bottom","20px");
+						$("#tasklist").css("transform","translateX(-50%)");
+						
+						$(this).hide();
+						$(".hongbao").hide();
+						$("#toshare").fadeIn(1000);
+						$("#logo").hide();
+					});
+				});
+				
+			}
+			
+			function refreshtasklist(data){
+				$("#logo").fadeIn(1000);
+				$("#tasklist38").css("width","130px");
+				$("#tasklist38").css("height","130px");
+				$("#tasklist38").animate({width:"80px",height:"80px",opacity:"show"},500); 
+			
+				$("#pic").attr("src",data.headimgurl);
+				$("#pic").fadeIn(1000);
+				
+				for (var i=0;i<7;i++){
+					if (data.tasks["task"+i]<=0){
+						$("#task"+i+"gsmall").fadeIn(1000);
+						$("#task"+i+"numbg").hide();
+						$("#task"+i+"tick").hide();
+						$("#task"+i+"num").hide();
+						$("#task"+i+"small").hide();
+					} else {
+						$("#task"+i+"gsmall").hide();
+						$("#task"+i+"numbg").fadeIn(1000);
+						$("#task"+i+"tick").fadeIn(1000);
+						$("#task"+i+"num").fadeIn(1000);
+						$("#task"+i+"small").fadeIn(1000);
+						$("#task"+i+"num").html(data.tasks["task"+i]);
+					}
+				}
+				if (data["7tasks"]&&data["7tasks"]!="none"){
+					$("#bigprize").fadeIn(1000); 
+					$("#bigprize").attr("tasks7",data["7tasks"]);
+					
+					$("#bigprize").one("click",function(){
+						$(".tasklist").hide();
+						post(null,{"7tasks":$(this).attr("tasks7")},after7taskhbcall);
+						//after7taskhbcall({"result":"success","7tasksresult":"6.66yuanhongbao","activedate":"2018-03-13 18:18:46","nickname":"Richard","prodid":"testp","lng":"121.48789948999993","tasks":{"task0":0,"task1":1,"task2":0,"task3":0,"task4":0,"task6":0,"task5":0},"pools":[],"eid":"t2","city":"%E6%9C%9D%E9%98%B3","playid":"YnHz8F7D92gmcDluJ%2Bofn8tXn9%2BXkKX8hEVD%2B6cOE9o%3D","countenc":2,"prizes":[],"credit":0,"headimgurl":"http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqoyRqfH5icpBXe6cxyHV8nGicNrkqFV45Qa2E9vxYqZzx5leYxUjZnlzNAz1Gy6L5D9o8xeE6EZvdQ/132","lat":"31.249161578948787","7tasks":"none"});
+					});
+					$("#bigprizeg").hide();
+				} else {
+					$("#bigprizeg").fadeIn(1000); 
+					$("#bigprize").hide(); 
+				}
+			}
+			
+			function after7taskhbcall(data){
+				var cash = data["7tasksresult"].substring(0,data["7tasksresult"].indexOf("yuan"));
+				share(
+						window.location.href.split("?")[0].replace("0","share")+"?"+sessionStorage.getItem("head")+"&"+sessionStorage.getItem("nick")+"&"+data["7tasksresult"],
+						sessionStorage.getItem("nick")+"玩特种兵“壳壳上班记”获得"+cash+"元现金红包",
+						window.location.href.split("?")[0].replace("0\.htm","images/shareimg.jpg")
+					);
+				showprize(data["7tasksresult"].replace("\.","d"));
+			}
+
+			function constructscene(){
+
+				for (var i=0;i<7;i++){
+					if ($("#task"+i).length==0){
+						$("body").append("<img id='task"+i+"' class='onetask' style='position:absolute;z-index:10001;bottom:150px;width:100%;left:100%;' src='images/task"+i+".png'/>");
+					}
+				}
+
+				if ($("#bg").length==0){
+					
+					$("body").append("<img id='bg' class='scene' style='position:absolute;display:none;top:0px;left:0px;width:100%;height:100%;' src='images/bg.png'/>");
+					
+					$("body").append("<img id='cloud' class='scene' style='position:absolute;display:none;opacity:0;top:-5px;height:180px;' src='images/scenecloud.png'/>");
+					$("body").append("<img id='birdsmall' class='scene' style='position:absolute;display:none;top:50px;left:120%;' src='images/birdsmall.png'/>");
+					$("body").append("<img id='beach' class='scene' style='position:absolute;display:none;left:0px;width:100%;height:100%;' src='images/scenebeach.png'/>");
+					$("body").append("<img id='birdbig' class='scene' style='position:absolute;display:none;top:50px;left:120%;' src='images/birdbig.png'/>");
+					$("body").append("<img id='treebottom' class='scene' style='position:absolute;display:none;top:30%;left:-160px;width:160px;' src='images/scenetreebottom.png'/>");
+					$("body").append("<img id='treetop' class='scene' style='position:absolute;z-index:9999;display:none;top:17%;left:-160px;width:160px;' src='images/scenetreetop.png'/>");
+
+					$("body").append("<img id='go' style='position:absolute;display:none;bottom:85px;height:70px;left:50%;transform: translateX(-50%);' src='images/go.png'/>");
+					$("body").append("<img id='rule' style='position:absolute;display:none;left:10px;bottom:10px;height:50px;' src='images/rule.png'/>");
+
+					$("body").append("<div id='ruledesc' style='position:absolute;z-index:10000;display:none;bottom:60px;width:310px;height:426px;left:50%;transform: translateX(-50%);'>"+
+					"<img style='position:absolute;top:0px;left:0px;width:310px;' src='images/rulebg.png'/>"+
+					"<img id='closerule' style='position:absolute;top:5px;right:5px;width:30px;' src='images/close.png'/>"+
+					"<div style='position:absolute;overflow-x:hidden;overflow-y:auto;top:70px;left:20px;right:20px;bottom:40px;'>"+
+						"<img style='width:100%' src='images/ruledesc.png'/>"+
+					"</div>"+
+					"<div style='position:absolute;width:100%;height:20px;padding:10px;bottom:0px;'>"+
+						"<img style='margin:auto;height:20px;' src='images/scroll.png'/>"+
+					"</div>"+
+					"</div>");
+				
+				}
+				imagesloaded(function(){
+					$("#logo").removeClass("pop");
+					$("#logo").css("top","5px");
+					$("#logo").css("right","5px");
+					$("#logo").css("width","70px");
+					$("#logo").css("left","");
+					$("#logo").css("height","");
+					$("#logo").css("transform","");
+					$("#logo").fadeIn(1000);
+					$(".scene").fadeIn(1000);
+					popshow();
+					$("#coco").css("bottom","100%");
+					$("#beach").css("top",$(document).height()+"px");
+					$("#beach").css("height",($(document).height()-100)+"px");
+					$( "#beach" ).addClass("showbeach");
+					$( "#cloud" ).addClass("floatcloud");
+					$("#title").css("bottom","100%");
+					$("#title").css("width","80%");
+					$("#title").css("top","");
+					$("#title").css("height","");
+					$("#title").css("left","50%");
+					$("#title").css("z-index","9998");
+					$("#title").css("transform","translateX(-50%)");
+					$("#title").show();
+					$("#birdbig").animate({top:"30px",left:"10px"},500,function(){
+						$(this).addClass("flybirdbig");
+						$("#treebottom").animate({left:"-80px"},500,function(){
+							$("#treetop").animate({left:"-50px"},500,function(){
+								$("#title").animate({bottom:"75%"},1000,function(){
+									$("#rule").fadeIn(1000);
+									$("#rule").click(function(){
+										$("#cover").fadeIn(1000);
+										$("#ruledesc").fadeIn(1000);
+									});
+									$("#closerule").click(function(){
+										$("#ruledesc").hide();
+										$("#cover").hide();
+									});
+									
+									var data = JSON.parse(sessionStorage.getItem("data-initwxjssdk"));
+									if (sessionStorage.getItem("data-init")!=null){
+										data = JSON.parse(sessionStorage.getItem("data-init"));
+									}
+									if (data.pools[0].type=="task"){
+										$("#go").fadeIn(1000);
+										$("#go").one("click",function(){
+											$(this).fadeOut(500);
+											$("#coco").fadeOut(500);
+											$("#title").fadeOut(500);
+											$("#rule").fadeOut(500);
+											post(data.pools[0].ticket,{},aftertaskcall);
+											//aftertaskcall({"result":"success","prizes":[{"amount":"1","id":"1","pooltype":"task","poolid":"0","desc":"task1","value":"1","require":"","type":"pool"}],"pools":[{"id":"1","ticket":"cf37d155ee6b40eb9db166874bf85127","require":"","type":"hongbao"}]});
+										});
+									} else {
+										popshow("errordata");
+									}
+								});
+								$("#coco").addClass("showcoco");
+							});
+						});
+					});
+					$("#birdsmall").animate({top:"20px",left:"60%"},500,function(){
+						$(this).addClass("flybirdsmall");
+					});
+				});
+			}
+			function aftertaskcall(data){
+				if (data.prizes.length==1){
+					//data.prizes[0].desc="thankyou";
+					if (data.prizes[0].desc=="thankyou"){
+						notworking();
+					} else {
+						goworking(data);
+					}
+				} else {
+					popshow("errordata");
+				}
+			}
+			function notworking(){
+				var reasonindex = Math.floor(Math.random()*10);
+				if($("#notworking"+reasonindex).length==0){
+					$("body").append("<img id='notworking"+reasonindex+"' class='notworking' style='position:absolute;display:none;top:50%;width:200px;left:50%;transform: translateX(-40%) translateY(-200px);' src='images/notworking"+reasonindex+".png'/>");
+				}
+				if($("#notworkdesc").length==0){
+					$("body").append("<img id='notworkdesc' class='notworking' style='position:absolute;display:none;bottom:80px;height:90px;left:50%;transform: translateX(-50%);' src='images/notworkdesc.png'/>");
+					$("body").append("<img id='notworkplate' class='notworking' style='position:absolute;display:none;bottom:50%;width:30px;right:10px;' src='images/notworkplate.png'/>");
+				}
+				imagesloaded(function(){
+					$("#notworkcoco").css("left","100%");
+					$("#notworkcoco").show();
+					$("#notworkcoco").animate({left:($(window).width()-$("#notworkcoco").width())/2+"px"},2000,function(){
+						$("#tasklist").fadeIn(1000);
+						$("#notworkplate").fadeIn(1000);
+						$("#notworkdesc").fadeIn(1000);
+						$("#notworking"+reasonindex).fadeIn(1000);
+					});
+				});
+				
+			}
+			function goworking(data){
+				if ($("#prizehint").length==0){
+					$("body").append("<img id='prizehint' class='onetask' style='position:absolute;z-index:10001;display:none;bottom:20px;height:180px;left:50%;transform: translateX(-50%);' src='images/prizehint.png'/>");
+					$("body").append("<img class='shine shining1 onetask' style='display:none;z-index:10001;height:0px;' src='images/shine1.png'>");
+					$("body").append("<img class='shine shining2 onetask' style='display:none;z-index:10001;height:0px;' src='images/shine2.png'>");
+					$("body").append("<img class='shine shining3 onetask' style='display:none;z-index:10001;height:0px;' src='images/shine3.png'>");
+					$("body").append("<img id='prize' class='onetask' style='position:absolute;z-index:10001;display:none;bottom:50px;height:55px;left:50%;transform: translateX(-50%);' src='images/prize.png'/>");
+				}
+				imagesloaded(function(){
+					post(data.pools[0].ticket,{},after1taskhbcall);
+					//after1taskhbcall({"result":"success","prizes":[{"amount":"1","id":"0","pooltype":"hongbao","poolid":"1","desc":"1yuanhongbao","value":"100","require":"","type":"cash"}]});
+					$("#"+data.prizes[0].desc).animate({left:"15%"},1000);
+				});
+			}
+			function after1taskhbcall(data){
+				share(
+						window.location.href.split("?")[0].replace("0","share")+"?"+sessionStorage.getItem("head")+"&"+sessionStorage.getItem("nick")+"&"+data.prizes[0].desc,
+						sessionStorage.getItem("nick")+"玩特种兵“壳壳上班记”获得1元现金红包",
+						window.location.href.split("?")[0].replace("0\.htm","images/shareimg.jpg")
+					);
+				$("#cover").fadeIn(1000);
+				$(".shine").fadeIn(1000);
+				$("#prizehint").fadeIn(1000);
+				$("#prize").fadeIn(1000);
+				$("#prize").one("click",function(){
+					showprize(data.prizes[0].desc);
+				});
+				
+			}
+			
+			function showprize(id){
+				if ($("#winbg").length==0){
+					$("body").append("<img id='winbg' class='pop hongbao width320center' src='images/winbg.png'/>");
+					$("body").append("<img id='1yuanhongbao' class='hongbao' style='position:absolute;display:none;bottom:120px;width:250px;left:50%;top:50%;transform: translateX(-50%) translateY(-170px);' src='images/1yuanhongbao.png'/>");
+					$("body").append("<img id='2d33yuanhongbao' class='hongbao' style='position:absolute;display:none;bottom:120px;width:250px;left:50%;top:50%;transform: translateX(-50%) translateY(-170px);' src='images/2.33yuanhongbao.png'/>");
+					$("body").append("<img id='6d66yuanhongbao' class='hongbao' style='position:absolute;display:none;bottom:120px;width:250px;left:50%;top:50%;transform: translateX(-50%) translateY(-170px);' src='images/6.66yuanhongbao.png'/>");
+					$("body").append("<img id='999yuanhongbao' class='hongbao' style='position:absolute;display:none;bottom:120px;width:250px;left:50%;top:50%;transform: translateX(-50%) translateY(-170px);' src='images/999yuanhongbao.png'/>");
+					$("body").append("<img id='toshare' class='hongbao' style='display:none;position:absolute;width:80%;left:50%;top:20px;transform:translateX(-50%);' src='images/toshare.png'/>");
+				}
+				imagesloaded(function(){
+					$(".hongbao").css("z-index","10001");
+					$("#"+id).fadeIn(1000);
+					$(".onetask").hide();
+					$(".tasklist").hide();
+					popshow("winbg");
+					$("#tasklist").css("top","50%");
+					$("#tasklist").css("transform","translateX(-140px) translateY(130px)");
+					
+					$("#tasklist").fadeIn(1000);
+					
+					$("#share").css("top","50%");
+					$("#share").css("transform","translateX(10px) translateY(130px)");
+					$("#share").fadeIn(1000);
+				});
+			}
+		</script>
+	</head>
+	<body style="position:fixed;top:0px;left:0px;right:0px;bottom:0px;overflow:hidden;font:20px Arial;color:#bbb;text-align:center;background:#fff;margin:0px;">
+		
+		<div id="coco" class="scene" style="position:absolute;display:none;z-index:9999;bottom:250px;width:100%"><div style="margin:auto;" class="livecoco"></div></div>
+		<div id="notworkcoco" style="position:absolute;top:50%;display:none;z-index:9999;transform:translateY(-70px);" class="notworkcoco notworking"></div>
+		
+		<img id="tasklist" style="position:absolute;z-index:10002;display:none;bottom:20px;height:40px;left:50%;transform: translateX(-50%);" src="images/tasklist.png"/>
+		<img id="share" style="position:absolute;z-index:10002;display:none;bottom:20px;height:40px;left:50%;transform: translateX(-50%);" src="images/share.png"/>
+	</body>
+</html>	

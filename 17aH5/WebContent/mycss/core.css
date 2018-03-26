@@ -1,0 +1,25 @@
+@keyframes loadingdot
+{
+	0%   {width:0%;}
+	50%   {width:70%;}
+	100%   {width:80%;}
+}
+
+.msg{
+	display:none;
+	position:absolute;
+	z-index:10001;
+	width:80%;
+	top:50%;
+	left:50%;
+	transform: translateX(-50%) translateY(-50%);
+}
+
+.width320center{
+	display:none;
+	position:absolute;
+	width:320px;
+	top:50%;
+	left:50%;
+	transform: translateX(-50%) translateY(-50%);
+}
