@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>17lsidcache</display-name>
+  	<servlet>
+	    <servlet-name>writeservlet</servlet-name>
+	    <servlet-class>com.lsid.cache.servlet.WriteCacheServlet</servlet-class>
+  	</servlet>
+  	
+    <servlet-mapping>
+	    <servlet-name>writeservlet</servlet-name>
+	    <url-pattern>/w/*</url-pattern>
+  	</servlet-mapping>
+  	<servlet>
+	    <servlet-name>nocacheservlet</servlet-name>
+	    <servlet-class>com.lsid.cache.servlet.NoCacheServlet</servlet-class>
+  	</servlet>
+  	
+    <servlet-mapping>
+	    <servlet-name>nocacheservlet</servlet-name>
+	    <url-pattern>/n/*</url-pattern>
+  	</servlet-mapping>
+  	<servlet>
+	    <servlet-name>readservlet</servlet-name>
+	    <servlet-class>com.lsid.cache.servlet.ReadCacheServlet</servlet-class>
+  	</servlet>
+  	
+    <servlet-mapping>
+	    <servlet-name>readservlet</servlet-name>
+	    <url-pattern>/r/*</url-pattern>
+  	</servlet-mapping>
+  <filter>
+    <filter-name>autoconfigfilter</filter-name>
+    <filter-class>
+	 	com.lsid.autoconfig.client.AutoConfig
+	</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>autoconfigfilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+</web-app>
