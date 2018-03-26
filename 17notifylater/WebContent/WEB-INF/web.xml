@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>17notifylater</display-name>
+  <filter>
+    <filter-name>autoconfigfilter</filter-name>
+    <filter-class>
+	 	com.lsid.autoconfig.client.AutoConfig
+	</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>autoconfigfilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <listener>
+    <listener-class>
+		 	 com.lsid.listener.EmailNow
+		</listener-class>
+  </listener>
+  <listener>
+    <listener-class>
+		 	 com.lsid.listener.SmsNow
+		</listener-class>
+  </listener>
+  <listener>
+    <listener-class>
+		 	 com.lsid.listener.AojinNow
+		</listener-class>
+  </listener>
+  <listener>
+    <listener-class>
+		 	 com.lsid.listener.TzbNow
+		</listener-class>
+  </listener>
+
+</web-app>
