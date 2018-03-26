@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <title>介知数据大屏</title>
+    <link id="lsidicon" href="" rel="shortcut icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/login.css">
+    <!--<script type="text/javascript" src="js/resize.js"></script>-->
+    <script type="text/javascript" src="3rdjs/jquery.js"></script>
+    <script type="text/javascript" src="3rdjs/aes.js"></script>
+    <script type="text/javascript" src="3rdjs/pbkdf2.js"></script>
+    <script type="text/javascript" src="3rdjs/AesUtil.js"></script>
+    <script type="text/javascript" src="3rdjs/jsencrypt.js"></script>
+    <script type="text/javascript" src="myjs/core.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('body').height($('body')[0].clientHeight);
+//            repeat1();
+//            repeat2();
+//            repeat3();
+//            resize();
+//            $(window).bind("resize",function(){
+//                resize();
+//            });
+            if (localStorage.getItem("logo")!=null){
+                $("#lsidicon").attr("href",localStorage.getItem("logo"));
+                $("#logo").attr("src",localStorage.getItem("logo"));
+                $("#logo").fadeIn(3000);
+            }
+            $("#passw0rd").keydown(function(e){
+                if(e.keyCode==13){
+                    $("#submit").click();
+                }
+            });
+            $("#submit").click(function(){
+                $("#error").hide();
+                post("/l0gin", {"name":$("#name").val(),"passw0rd":$("#passw0rd").val()}, login);
+            });
+
+        });
+        function login(res){
+            if (res.result=="success"){
+                localStorage.setItem("logo", "myimage/"+sessionStorage.getItem("eid")+".png");
+                localStorage.setItem("activities", JSON.stringify(res.activities));
+                localStorage.setItem("products", JSON.stringify(res.products));
+                sessionStorage.setItem("self",res.self);
+                window.location.href="login.html";
+            } else {
+                $("#error").fadeIn();
+            }
+        }
+//        function resize(){
+//            $("#form").css("top",($(window).height()-$("#form").height())/2);
+//            $("#form").css("left",($(window).width()-$("#form").width())/2);
+//        }
+//        function repeat1(){
+//            $("#floating1").css("top",Math.random()*($(window).height()-100));
+//            $("#floating1").css("left",Math.random()*($(window).width()-100));
+//            $("#floating1").css("background-color",'#'+Math.floor(Math.random()*0xffffff).toString(16));
+//            $("#floating1").fadeIn(3000, function(){
+//                $("#floating1").fadeOut(3000, repeat1);
+//            });
+//        }
+//        function repeat2(){
+//            $("#floating2").css("top",Math.random()*($(window).height()-60));
+//            $("#floating2").css("left",Math.random()*($(window).width()-60));
+//            $("#floating2").css("background-color",'#'+Math.floor(Math.random()*0xffffff).toString(16));
+//            $("#floating2").fadeIn(2300, function(){
+//                $("#floating2").fadeOut(2300, repeat2);
+//            });
+//        }
+//        function repeat3(){
+//            $("#floating3").css("top",Math.random()*($(window).height()-30));
+//            $("#floating3").css("left",Math.random()*($(window).width()-30));
+//            $("#floating3").css("background-color",'#'+Math.floor(Math.random()*0xffffff).toString(16));
+//            $("#floating3").fadeIn(1600, function(){
+//                $("#floating3").fadeOut(1600, repeat3);
+//            });
+//        }
+    </script>
+</head>
+<body style="overflow: hidden;">
+<!--<div style="position:absolute;width:100%;height:100%;overflow:hidden; background: url(images/loginbg.jpg) no-repeat 50% 0; background-size: cover;">-->
+    <!--<div id="floating1" style="position:absolute;width:100px;height:100px;border-radius:50px;display:none;z-index:-1"></div>-->
+    <!--<div id="floating2" style="position:absolute;width:60px;height:60px;border-radius:30px;display:none;z-index:-1"></div>-->
+    <!--<div id="floating3" style="position:absolute;width:30px;height:30px;border-radius:15px;display:none;z-index:-1"></div>-->
+    <!--&lt;!&ndash;<img id="logo" src="" style="display:none;position:absolute;width:60px;z-index:0;top:10px;left:10px;"/>&ndash;&gt;-->
+    <!--<div id="form" style="position:absolute;text-align:center;z-index:9999;width:320px;height:200px;">-->
+        <!--<div style="margin:5px;">数据平台</div>-->
+        <!--<div style="margin:5px;"><input style="height: 30px; width: 240px; margin-bottom: 15px;" id="name" type="text" placeholder="用户名"/></div>-->
+        <!--<div style="margin:5px;"><input style="height: 30px; width: 240px; margin-bottom: 15px;" id="passw0rd" type="password" placeholder="密码"/></div>-->
+        <!--<div style="margin:5px;"><input style="height: 30px; width: 120px"id="submit" type="button" value="登录"/></div>-->
+        <!--<div id="error" style="margin:5px;color:#c33;display:none;">请使用正确的用户名和密码</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+<div class="container clearfix">
+    <div class="form">
+        <p><span><img src="images/login.png"></span></p>
+        <p class="text">登录</p>
+        <form action="">
+            <div class="form-group col-xs-12 col-md-12">
+                <input type="text" name="username" class="form-control" id="name" placeholder="用户名">
+                <span id="helpBlock1" class="help-block"></span>
+            </div>
+            <div class="form-group col-xs-12 col-md-12">
+                <input type="password" name="password" class="form-control" id="passw0rd" placeholder="密码">
+                <span id="helpBlock2" class="help-block"></span>
+            </div>
+            <div class="col-xs-12 col-md-12">
+                <span id="helpBlock3" class="help-block"></span>
+            </div>
+            <div class="col-xs-12 col-md-12">
+                <button type="button" class="btn" id="submit">登 录</button>
+            </div>
+        </form>
+        <div id="error" style="height: 45px;line-height: 45px;margin:10px;color:#c33;display:none;text-align: center;">  请使用正确的用户名和密码</div>
+    </div>
+</div>
+
+</body>
+</html>

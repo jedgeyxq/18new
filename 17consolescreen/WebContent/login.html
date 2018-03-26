@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--<meta name="viewport"-->
+    <!--content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">-->
+    <meta http-equiv="x-ua-compatible" content="IE=edge, chrome=1">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <title>介知数据大屏</title>
+    <!--<link rel="stylesheet" href="css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="css/index.css">
+    <!--<link rel="stylesheet" media="all and (orientation:portrait)" href="css/media.css">-->
+    <link rel="stylesheet" href="css/calendar.css">
+    <script src="js/echarts.min.js"></script>
+    <script type="text/javascript" src="3rdjs/jquery.js"></script>
+    <script type="text/javascript" src="js/resize.js"></script>
+    <script type="text/javascript" src="3rdjs/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="3rdjs/datepicker-zh.js"></script>
+    <script type="text/javascript" src="3rdjs/aes.js"></script>
+    <script type="text/javascript" src="3rdjs/pbkdf2.js"></script>
+    <script type="text/javascript" src="3rdjs/AesUtil.js"></script>
+    <script type="text/javascript" src="3rdjs/jsencrypt.js"></script>
+    <script type="text/javascript" src="3rdjs/echarts.min.js"></script>
+    <script type="text/javascript" src="3rdjs/china.js"></script>
+    <script type="text/javascript" src="3rdjs/jquery.form.js"></script>
+    <script type="text/javascript" src="myjs/core.js"></script>
+    <script type="text/javascript" src="myjs/pc.js"></script>
+    <script src="js/echarts-data.js"></script>
+    <!--<script>-->
+        <!--window.onload = function () {-->
+            <!--alert(window.screen.width);-->
+        <!--}-->
+    <!--</script>-->
+</head>
+<body>
+<!--header-PC-->
+    <div class="header clearfix">
+        <div class="fl left"><img src="images/logo.png" alt=""></div>
+        <div class="fl center">数据大屏</div>
+        <div class="fl right">
+            <span class="time" style="font-family: Gotham-MediumRegular;" id="DATE"></span>
+            <!--<span><img src="images/refresh.png" alt=""></span>-->
+            <a href="index.html" style="color: #708392; text-decoration: none; margin-left: 20px;">退出</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="main clearfix">
+            <!--Mobile start-->
+            <div class="data-right fl" id="MobileData">
+                <div class="num-box clearfix">
+                    <div class="total-number fl">
+                        <img src="images/04.png" alt="">
+                        <div class="num">
+                            <p>今日扫码人数</p>
+                            <p class="fontSize wxtodayscanusers" style="font-family: Gotham-MediumRegular;" id="WXtodayscansusers">0</p>
+                            <p class="new-data" style="font-family: Gotham-MediumRegular;"></p>
+                        </div>
+                    </div>
+                    <div class="canyu-number fl">
+                        <img src="images/05.png" alt="">
+                        <div class="num">
+                            <p>今日扫码人次</p>
+                            <p class="fontSize wxtodayscans" style="font-family: Gotham-MediumRegular;" id="WXtodayscan">0</p>
+                            <p class="new-data" style="font-family: Gotham-MediumRegular;"></p>
+                        </div>
+                    </div>
+                <!--</div>-->
+                <!--<div class="mun-box clearfix">-->
+                    <div class="total-number fl">
+                        <img src="images/02.png" alt="">
+                        <div class="num">
+                            <p>总扫码人次</p>
+                            <p class="fontSize wxscan" style="font-family: Gotham-MediumRegular;" id="wxscan">0</p>
+                            <p class="new-data" style="font-family: Gotham-MediumRegular;"></p>
+                        </div>
+                    </div>
+                    <div class="canyu-number fl">
+                        <img src="images/03.png" alt="">
+                        <div class="num">
+                            <p>活动参与总人数</p>
+                            <p class="fontSize wxtotalprizeusers" style="font-family: Gotham-MediumRegular;" id="totalprizeusers">0</p>
+                            <p class="new-data" style="font-family: Gotham-MediumRegular;"></p>
+                        </div>
+                    </div>
+                <!--</div>-->
+                <!--<div class="mun-box clearfix">-->
+                    <div class="total-number fl">
+                        <img src="images/04.png" alt="">
+                        <div class="num">
+                            <p>领奖人次</p>
+                            <p class="fontSize wxtotalprizes" style="font-family: Gotham-MediumRegular;" id="WXtotalprizes">0</p>
+                            <p class="new-data" style="font-family: Gotham-MediumRegular;"></p>
+                        </div>
+                    </div>
+                    <!--<div class="canyu-number fl">-->
+                        <!--<img src="images/05.png" alt="">-->
+                        <!--<div class="num">-->
+                            <!--<p>活动参与总人次</p>-->
+                            <!--<p class="fontSize wxtotalprizetimes" style="font-family: Gotham-MediumRegular;" id="WXtotalprizetimes">0</p>-->
+                            <!--<p class="new-data" style="font-family: Gotham-MediumRegular;"></p>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                </div>
+                <!--<div class="map-box">-->
+                    <!--<p>活动数据全国分布</p>-->
+                    <!--<div id="mobileMap" ></div>-->
+                <!--</div>-->
+            </div>
+            <!--Mobile end-->
+        <div class="echarts-left fl">
+            <div class="trend-box">
+                <p>7日扫码趋势</p>
+                <div class="trend" id="trend"></div>
+            </div>
+            <div class="situation-box">
+                <p>7日中奖情况</p>
+                <div class="trend" id="situation"></div>
+            </div>
+            <div class="ranking-box">
+                <p>7日活动参与区域排名</p>
+                <div class="trend" id="ranking"></div>
+            </div>
+        </div>
+        <div class="data-right fl" >
+            <div class="fl data-main">
+                <div class="clearfix num-box" id="PCData">
+                    <div class="today-number fl" id="today-number">
+                        <img src="images/01.png" alt="">
+                        <div class="dataL">
+                            <p>今日扫码人数</p>
+                            <p class="fontSize wxtodayscanusers" style="font-family: Gotham-MediumRegular;" id="todayscansusers">0</p>
+                            <p class="new-data" style="font-family: Gotham-MediumRegular;"></p>
+                        </div>
+                        <div class="dataR">
+                            <p>今日扫码人次</p>
+                            <p class="fontSize wxtodayscans" style="font-family: Gotham-MediumRegular;" id="todayscan">0</p>
+                            <p class="new-data" style="font-family: Gotham-MediumRegular;"></p>
+                        </div>
+                    </div>
+                    <div class="total-number fl" id="total-number">
+                        <div class="front-back">
+                            <div class="front">
+                                <img src="images/02.png" alt="">
+                                <div class="num">
+                                    <p>总扫码人次</p>
+                                    <p class="fontSize wxscan" style="font-family: Gotham-MediumRegular;" id="scan">0</p>
+                                    <p class="new-data" style="font-family: Gotham-MediumRegular;"></p>
+                                </div>
+                            </div>
+                            <div class="back">
+                                <img src="images/back1.png" alt="">
+                                <p>凡进行过扫码动作<br>
+                                    的次数
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="prizes-number fl">
+                        <div class="front-back">
+                            <div class="front">
+                                <img src="images/04.png" alt="">
+                                <div class="num">
+                                    <p>活动参与总人数</p>
+                                    <p class="fontSize wxtotalprizeusers" style="font-family: Gotham-MediumRegular;" id="wxtotalprizeusers">0</p>
+                                    <p class="new-data" style="font-family: Gotham-MediumRegular;"></p>
+                                </div>
+                            </div>
+                            <div class="back">
+                                <img src="images/back3.png" alt="">
+                                <p>完整参与过活动的微信ID<br>
+                                    (一个微信ID对应一个人数)<br>
+                                    不包含重复扫码的
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="canyu-number fl" id="canyu-number">-->
+                        <!--<div class="front-back">-->
+                            <!--<div class="front">-->
+                                <!--<img src="images/03.png" alt="">-->
+                                <!--<div class="num">-->
+                                    <!--<p>活动参与总人次</p>-->
+                                    <!--<p class="fontSize wxtotalprizetimes" style="font-family: Gotham-MediumRegular;" id="totalprizetimes">0</p>-->
+                                    <!--<p class="new-data" style="font-family: Gotham-MediumRegular;"></p>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="back">-->
+                                <!--<img src="images/back2.png" alt="">-->
+                                <!--<p>完整参与过活动的次数<br>-->
+                                    <!--包含重复参与的-->
+                                <!--</p>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                </div>
+                <div class="map-box">
+                    <p>活动数据全国分布</p>
+                    <div id="map" ></div>
+                </div>
+            </div>
+            <div class="fl sidebarR" id="PCsidebar">
+                <!--<div class="prizes-number">-->
+                    <!--<div class="front-back">-->
+                        <!--<div class="front">-->
+                            <!--<img src="images/04.png" alt="">-->
+                            <!--<div class="num">-->
+                                <!--<p>活动参与总人数</p>-->
+                                 <!--<p class="fontSize wxtotalprizeusers" style="font-family: Gotham-MediumRegular;" id="wxtotalprizeusers">0</p>-->
+                                <!--<p class="new-data" style="font-family: Gotham-MediumRegular;"></p>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="back">-->
+                            <!--<img src="images/back3.png" alt="">-->
+                            <!--<p>完整参与过活动的微信ID<br>-->
+                               <!--(一个微信ID对应一个人数)<br>-->
+                                <!--不包含重复扫码的-->
+                            <!--</p>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="join-number" id="dataList">
+                    <div class="front-back">
+                        <div class="front">
+                            <img src="images/05.png" alt="">
+                            <div class="num">
+                                <p>领奖人次</p>
+                                <p class="fontSize wxtotalprizes" style="font-family: Gotham-MediumRegular;" id="totalprizes">0</p>
+                                <p class="new-data" style="font-family: Gotham-MediumRegular;"></p>
+                            </div>
+                        </div>
+                        <div class="back">
+                            <img src="images/back4.png" alt="">
+                            <!--<p>成功领奖的次数</p>-->
+                            <ul style="position: absolute; top: 5px; left: 0px; width: 100%; height: auto; font-size: 10px; color: #fff;padding: 10px 0 10px 20px;box-sizing: border-box; background: #0054ff; z-index: 99; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+                                <!--<li>京东：<span>220</span></li>-->
+                                <!--<li>百度外卖：<span>220</span></li>-->
+                                <!--<li>滴滴：<span>220</span></li>-->
+                                <!--<li>公众号：<span>220</span></li>-->
+                                <!--<li>谢谢参与：<span>220</span></li>-->
+                                <!--<li>1元：<span>220</span></li>-->
+                                <!--<li>3元：<span>220</span></li>-->
+                                <!--<li>ofo：<span>220</span></li>-->
+                                <!--<li>2元：<span>220</span></li>-->
+                                <!--<li>微店：<span>220</span></li>-->
+                                <!--<li>罗志祥纪念水杯：<span>220</span></li>-->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="erCode">
+                    <div><input class="erCode-query" id="erCode-input" type="text" placeholder="二维码状态查询"></input>
+                        <p class="tips">点击加号上传需要查询的二维码图片</p>
+                    </div>
+                    <div class="query-bg">
+                        <a href="#">
+                            <img src="images/push.png" alt="">
+                        </a>
+                        <form id="theForm" enctype="multipart/form-data" method="post" action="">
+                            <input type="file" id="file-input" name="codepic">
+                            <input type="submit" id="thesubmit" style="display:none"/>
+                        </form>
+                    </div>
+                    <span id="erCode-search">点击查询</span>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+<!--<iframe id="baidumap" src="baidu.html" scrolling="no" style="position:absolute;overflow:hidden;z-index:-1;border:0;" width="100%" height="100%"></iframe>-->
+</body>
+<div class="mask" id="mask">
+    <div class="popup">
+        <p class="top"><span class="fl">二维码状态查询</span><a href="javascript:;" class="fr" id="close"><img src="images/close.png" alt=""></a></p>
+        <div class="iden-check">
+            <p>是否正品身份码  <i id="yes">是</i> <i id="no">否</i></p>
+            <p class="win"><a href="javascript:;">中奖情况</a></p>
+            <div class="ul-list" id="uldiv">
+                <!--<ul>-->
+                    <!--<li><span></span></li>-->
+                    <!--<li>米的你发的</li>-->
+                    <!--<li>2017.06.12 17:35</li>-->
+                    <!--<li>2017.06.12</li>-->
+                    <!--<li>2017.06.12</li>-->
+                    <!--<li>2017.米的你发的.12<span>hdu2u23</span></li>-->
+                    <!--<li>已经</li>-->
+                <!--</ul>-->
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--echarts-->
+<div class="echart-mask" id="echart-mask">
+    <div class="echart-popup" id="echart-popup1">
+        <p class="top"><span class="fl">7日扫码趋势</span><a href="javascript:;" class="fr" id="close1"><img src="images/close.png" alt=""></a></p>
+        <div class="conditional-query">
+            <ul id="queryTrend">
+                <li>15日扫码趋势</li>
+                <li>30日扫码趋势</li>
+                <li>90日扫码趋势</li>
+                <li>至今</li>
+            </ul>
+        </div>
+        <div class="echart1" id="trend1"></div>
+    </div>
+    <div class="echart-popup" id="echart-popup2">
+        <p class="top"><span class="fl">7日中奖情况</span><a href="javascript:;" class="fr" id="close2"><img src="images/close.png" alt=""></a></p>
+        <div class="conditional-query">
+            <span>性别 <em id="women2">女</em><em class="man" id="man2">男</em><em style="width: 68px; background: #7112d4; color: #fff" id="genderAll2">全部性别</em></span>
+            <ul id="queryLuck">
+                <li>15日中奖情况</li>
+                <li>30日中奖情况</li>
+                <li>90日中奖情况</li>
+                <li>至今</li>
+            </ul>
+        </div>
+        <div class="echart1" id="situation1"></div>
+    </div>
+    <div class="echart-popup" id="echart-popup3">
+        <p class="top"><span class="fl">7日活动参与区域排名</span><a href="javascript:;" class="fr" id="close3"><img src="images/close.png" alt=""></a></p>
+        <div class="conditional-query">
+            <span>性别 <em id="women3">女</em><em class="man" id="man3">男</em><em style="width: 68px; background: #7112d4; color: #fff" id="genderAll3">全部性别</em></span>
+            <ul id="queryCity">
+                <li>15日活动参与区域</li>
+                <li>30日活动参与区域</li>
+                <li>90日活动参与区域</li>
+                <li>至今</li>
+            </ul>
+        </div>
+        <div class="echart1" id="ranking1"></div>
+    </div>
+</div>
+<!--Big Map-->
+<div class="bigMap-mask" id="bigMap-mask">
+    <div class="allmap-box">
+        <p><span>活动数据全国分布</span><a href="javascript:;" id="closemap"><img src="images/close.png" alt=""></a></p>
+        <div id="allmap" class="allmap"></div>
+        <ul class="realData clearfix">
+
+            <li>
+                <span>今日扫码人数</span>
+                <span id="maptodayscansusers">0</span>
+            </li>
+            <li>
+                <span>今日扫码人次</span>
+                <span id="maptodayscan">0</span>
+            </li>
+            <li>
+                <span>总扫码人次</span>
+                <span id="mapscan">0</span>
+            </li>
+            <li>
+                <span>活动参与总人次</span>
+                <span id="maptotalprizetimes">0</span>
+            </li>
+            <li>
+                <span>活动参与总人数</span>
+                <span id="mapwxtotalprizeusers">0</span>
+            </li>
+            <li>
+                <span>领奖人次</span>
+                <span id="maptotalprizes">0</span>
+            </li>
+        </ul>
+        <!--<ul class="time-query clearfix" id="time-query">-->
+            <!--<li id="realTimeData" class="on"><span>实时 </span><img src="images/clock.png" alt=""></li>-->
+            <!--<li><span>按日期查询 </span><img src="images/calendar.png" alt=""></li>-->
+            <!--<li class="bluebg"></li>-->
+        <!--</ul>-->
+        <div id="ca"></div>
+    </div>
+</div>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Bt03kakXruUs496U9EpIMvcpNzDarwGN"></script>
+<script src="3rdjs/echartsConfig.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/echarts-data.js"></script>
+<script src="js/codeSearch.js"></script>
+<script src="js/echartsPopup.js"></script>
+<script src="js/conditionQuery.js"></script>
+<script src="js/allmap.js"></script>
+</html>

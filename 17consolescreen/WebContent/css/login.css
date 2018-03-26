@@ -1,0 +1,25 @@
+body{font-family: "微软雅黑",arial; }
+@font-face {
+    font-family: 'Gotham-MediumRegular';
+    src: url('../fonts/Gotham-Medium.eot');  /*IE*/
+    src: url('../fonts/Gotham-Medium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/Gotham-Medium.woff') format('woff'),
+         url('../fonts/Gotham-Medium.ttf') format('truetype'),
+         url('../fonts/Gotham-Medium.svg#Gotham-Medium') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+.container{ width: 100%; min-height: 1000px; background: url(../images/loginbg.jpg) 50% 0 no-repeat; background-size: cover; }
+.container .form{width: 360px; height: 400px; position: absolute; top: 50%; left: 50%; margin-top: -200px; margin-left: -180px;background: rgba(255,255,255,0.15); padding: 0 20px; }
+.container .form p{text-align: center; padding: 28px 0 15px 0; font-size: 18px; color: #fff;}
+.container .form p.text{padding: 0 0 20px 0;}
+.form p span{ display: inline-block; width: 42px; height: 42px; }
+.form p img{ width: 100%; }
+.form .btn{ width: 100%; background: #de615d; color: #fff; }
+.help-block{font-size: 14px; color: #fff; display: none;}
+.clearfix:after{
+    content: "";
+    height: 0;
+    overflow: hidden;
+    clear: both;
+}

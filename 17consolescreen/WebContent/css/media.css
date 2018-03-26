@@ -1,0 +1,95 @@
+/*@media screen and (min-width: 767px){  !* and (max-width: 1680px) *!*/
+    /*#MobileData{ display: none;}*/
+    /*.container{min-width: 1183px;}*/
+    /*!*.echarts-left{*!*/
+        /*!*min-width: 460px;*!*/
+    /*!*}*!*/
+    /*!*.data-right{*!*/
+         /*!*min-width: 680px;*!*/
+     /*!*}*!*/
+    /*.erCode .query-bg{*/
+        /*height: 40%;*/
+    /*}*/
+    /*.erCode .query-bg a, .erCode .query-bg input{*/
+        /*width: 80px;*/
+        /*height: 80px;*/
+        /*margin-left: -40px;*/
+        /*margin-top: -40px;*/
+    /*}*/
+    /*.dataL, .dataR,.data-main .num,.sidebarR .num{ top: 2%;}*/
+/*}*/
+
+@media screen and (max-width: 768px){  /* 576px */
+    #PCData{ display: none;}
+    #PCsidebar{ display: none;}
+    #MobileData{ display: block;}
+    body{ overflow-x: hidden;}
+    .header{ padding: 0 20px; width: 100%; box-sizing: border-box; min-width: 100%;}
+    .header img{ width: 100%}
+    .header .left {
+        padding-top: 20px;
+    }
+    .header .center{
+        width: 35%;
+    }
+    .header .right{
+        width: 43%;
+    }
+    .echarts-left .trend-box, .echarts-left .situation-box, .echarts-left .ranking-box,.echarts-left{
+        width: 100%;
+    }
+    .echarts-left .trend, .echarts-left .situation, .echarts-left .ranking,.echarts-left{
+        width: 100%;
+    }
+    .echarts-left{
+        padding-right: 12px;
+    }
+    .data-right,.data-right .data-main{
+        width: 100%;
+        margin: 0;
+    }
+    .num-box{
+        padding: 0 20px;
+        height: 390px;
+    }
+    .total-number, .canyu-number{
+        width: 48.5%;
+        height: 120px;
+        margin-right: 3%;
+        margin-bottom: 10px;
+    }
+    .total-number img, .canyu-number img{
+        width: 100%;
+        height: 100%;
+    }
+    .canyu-number{
+        margin-right: 0px;
+    }
+    #mobileMap{
+        width: 100%;
+        height: 600px;
+    }
+    .data-right .map-box p{
+        color: #fff;
+    }
+    .num-box .num{
+        height: 120px;
+        position: absolute;
+        top: 10px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+    }
+    .num-box .num p{
+        height: 48px;
+        line-height: 48px;
+        margin: 0;
+        font-size: 18px;
+        color: #fff;
+        text-align: center;
+    }
+    .num-box .num .fontSize{
+        font-size: 36px;
+    }
+    #map{height: 500px;}
+}
