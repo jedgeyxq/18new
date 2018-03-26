@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>17consoledata</display-name>
+  	<servlet>
+	    <servlet-name>scanpositiondataservlet</servlet-name>
+	    <servlet-class>com.lsid.console.servlet.ScanPositionDataServlet</servlet-class>
+  	</servlet>
+  	
+    <servlet-mapping>
+	    <servlet-name>scanpositiondataservlet</servlet-name>
+	    <url-pattern>/spd/*</url-pattern>
+  	</servlet-mapping>
+
+  	<servlet>
+	    <servlet-name>todeliverdataservlet</servlet-name>
+	    <servlet-class>com.lsid.console.servlet.TodeliverDataServlet</servlet-class>
+  	</servlet>
+  	
+    <servlet-mapping>
+	    <servlet-name>todeliverdataservlet</servlet-name>
+	    <url-pattern>/tdd/*</url-pattern>
+  	</servlet-mapping>
+
+  	<servlet>
+	    <servlet-name>mapredservlet</servlet-name>
+	    <servlet-class>com.lsid.console.servlet.MapredQueryServlet</servlet-class>
+  	</servlet>
+  	
+    <servlet-mapping>
+	    <servlet-name>mapredservlet</servlet-name>
+	    <url-pattern>/mapred/*</url-pattern>
+  	</servlet-mapping>
+
+  <filter>
+    <filter-name>autoconfigfilter</filter-name>
+    <filter-class>
+	 	com.lsid.autoconfig.client.AutoConfig
+	</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>autoconfigfilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+    	<listener>
+		<listener-class>
+		 	 com.lsid.listener.LsidSocketServer
+		</listener-class>
+	</listener>
+</web-app>
