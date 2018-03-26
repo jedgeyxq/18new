@@ -1,0 +1,103 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#refresh").click();
+	});
+	function refresh(params){
+		$("#echarts").children().remove();
+		var thechart = echarts.init(document
+				.getElementById('echarts'));
+		var theoption = {
+			    title : {
+			    	x:'center',
+			        text: '参与频次',
+			        subtext: ''
+			    },
+			    tooltip : {
+			        trigger: 'axis',
+			        showDelay : 0,
+			        formatter : function (params) {
+			            if (params.value.length > 1) {
+			                return params.seriesName + ' :<br/>'
+			                   + params.value[0] + '人' 
+			                   + params.value[1] + '次';
+			            }
+			            else {
+			                return params.seriesName + ' :<br/>'
+			                   + params.name + ' : '
+			                   + params.value + '次';
+			            }
+			        },  
+			        axisPointer:{
+			            show: true,
+			            type : 'cross',
+			            lineStyle: {
+			                type : 'dashed',
+			                width : 1
+			            }
+			        }
+			    },
+			    legend: {
+			    	x:"right",
+			        data:['参与频次']
+			    },
+			    toolbox: {
+			        show : true,
+			      	x:"right",
+			        y:"center",
+			        orient:'vertical',
+			        feature : {
+			            mark : {show: true},
+			            dataZoom : {show: true},
+			            dataView : {show: true, readOnly: false},
+			            restore : {show: true},
+			            saveAsImage : {show: true}
+			        }
+			    },
+			    xAxis : [
+			        {
+			            type : 'value',
+			            scale:true,
+			            axisLabel : {
+			                formatter: '{value}人'
+			            }
+			        }
+			    ],
+			    yAxis : [
+			        {
+			            type : 'value',
+			            scale:true,
+			            axisLabel : {
+			                formatter: '{value}次'
+			            }
+			        }
+			    ],
+			    series : [
+			        {
+			            name:'参与频次',
+			            type:'scatter',
+			            data: [],
+			            markPoint : {
+			                data : [
+			                    {type : 'max', name: '最大值'},
+			                    {type : 'min', name: '最小值'}
+			                ]
+			            },
+			            markLine : {
+			                data : [
+			                    {type : 'average', name: '平均值'}
+			                ]
+			            }
+			  
+			        }
+			    ]
+			};          
+		thechart.showLoading();
+		post("/ts", params, function(res){
+			thechart.hideLoading();
+			theoption.title.text=res.begin+"到"+res.end+"期间的参与频次"+"("+($("input[name='from']:checked").val()=="wx"?"微信":"支付宝")+")";
+			theoption.series[0].data = res.data;
+			thechart.setOption(theoption, true);
+		});
+	}
+</script>
+<div id="echarts" style="width:100%;height:100%;"></div>

@@ -1,0 +1,59 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#orderdata").children().remove();
+		$("#totalorders").html("加载中...");
+		$("#orderdata").append("<tr style='border-top:solid 1px grey;border-bottom:solid 1px grey;'><td align='center'>订单序号</td><td align='center'>实物名称</td><td align='center'>实物数量</td><td align='center'>下单时间</td></tr>");
+		post("/td",{},renderorders);
+	});
+	function renderorders(res){
+		var i = 0;
+		var datai = res["data"+i];
+		while (datai!=undefined){
+			var parts = datai.split("#");
+			var desc = decodeURIComponent(parts[0]);
+			var num = parts[1];
+			var addr = decodeURIComponent(parts[2]);
+			var time  =new Date(parseInt(parts[3])).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+			var oid = parts[4];
+			$("#orderdata").append("<tr orderid='"+oid+"' id='ordernum"+i+"' detailid='detail"+i+"' class='showdetail' style='cursor:pointer;'><td align='center'>"+(i+1)+"</td>"+
+					"<td align='center'>"+desc+"</td><td align='center'>"+num+"</td><td align='center'>"+time+
+					"</td></tr>");
+			$("#orderdata").append("<tr id='detail"+i+"' style='display:none;background-color:white;'><td align='left' colspan='3'>"+addr+
+			"</td><td align='center'><input type='text' id='shipby"+i+"' placeholder='物流公司名称' size='15'><br><input type='text' id='shipnum"+i+"' placeholder='发货单号' size='15'/><br><input type='button' ordernum='"+i+"' class='send' value='发货'/></td></tr>");
+			i++;
+			datai = res["data"+i];
+		}
+		$("#totalorders").html(res.total);
+		$(".send").click(function(){
+			var shipby = $("#shipby"+$(this).attr("ordernum")).val();
+			var shipnum = $("#shipnum"+$(this).attr("ordernum")).val();
+			if(shipby==""||shipby.indexOf(" ")!=-1||shipnum==""||shipnum.indexOf(" ")!=-1){
+				alert("请输入物流公司名称和发货单号,不含空格");
+			} else {
+				post("/tdu",{"oid":$("#ordernum"+$(this).attr("ordernum")).attr("orderid"),"shipby":shipby,"shipnum":shipnum},aftersend);
+			}
+		});
+		$(".showdetail").click(function(){
+			if ($("#"+$(this).attr("detailid")).is(':visible')){
+				$("#"+$(this).attr("detailid")).hide();
+				$(this).css("background-color","");
+			} else {
+				$(this).css("background-color","grey");
+				$("#"+$(this).attr("detailid")).show();
+			}
+		});
+	}
+	function aftersend(res){
+		$(".showdetail").each(function(){
+			if ($(this).attr("orderid")==res.oid){
+				$("#"+$(this).attr("detailid")).remove();
+				$(this).remove();
+				return false;
+			}
+		});
+		$("#totalorders").html(parseInt($("#totalorders").html())-1);
+	}
+</script>
+<div style="width:100%;text-align:center;">待发货订单总数量：<span id="totalorders">0</span></div>
+<table id="orderdata" style="width:100%;border-collapse:collapse">
+</table>

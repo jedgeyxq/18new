@@ -1,0 +1,91 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#searchcode").click(function(){
+			$("#invalidcode").hide();
+			$("#codeprizedata").children().remove();
+			$("#coderepositorydata").children().remove();
+			$(this).attr("value","加载中");
+			post("/rd",{"enc":aesencrypt($("#inputcode").val())},renderesult);
+		});
+		var options = {
+			url:"",
+			clearForm:true,
+			dataType:"html",
+        	success: function (result) {
+        		try{
+    				var res = eval("("+result+")");
+    				if (res.reason=="expire"){
+    					alert("登录过期，请重新登录");
+    					sessionStorage.removeItem("t0ken");
+    					$(window.location).attr('href', "index.html");
+    				} else {
+    					if (res.result=="success"){
+    						sessionStorage.setItem("t0ken", aesdecrypt(res.t0ken));
+    						renderesult(res);
+    					} else {
+    						sessionStorage.setItem("t0ken", aesdecrypt(res.t0ken));
+    	    				alert("系统错误："+res.reason);
+    					}
+    				}	
+    			}catch(e){
+    				alert("系统繁忙，请稍后再试");
+    			}
+            }
+        };
+        $("#theForm").ajaxForm(options);
+		$("#uploadcodepic").click(function(){
+			$("#invalidcode").hide();
+			$("#codeprizedata").children().remove();
+			$("#coderepositorydata").children().remove();
+			$("#searchcode").attr("value","加载中");
+			options.url=interfacehost+"/rd?t0ken="+sessionStorage.getItem("t0ken");
+			$("#theForm").ajaxForm(options);
+			$("#thesubmit").click();
+		});
+	});
+	function renderesult(res){
+		$("#searchcode").attr("value","查询");
+		if (res.codeprizedata!=undefined&&res.codeprizedata.length>0){
+			$("#codeprizedata").append("<tr style='border-top:solid 1px grey;border-bottom:solid 1px grey'><td align='center'>昵称</td><td align='center'>参与时间</td><td align='center'>活动</td><td align='center'>结果</td></tr>");
+			for (var i=0;i<res.codeprizedata.length;i++){
+				var head = "<div style='border-radius:14px;width:28px;height:28px;overflow:hidden;'><img style='width:28px;height:28px;' src='"+res.codeprizedata[i].headimgurl+"'/></div>";
+				var nick = decodeURIComponent(res.codeprizedata[i].nick);
+				$("#codeprizedata").append("<tr detailid='detail"+i+"' class='showdetail' style='cursor:pointer'><td align='center'>"+nick+"</td>"+
+						"<td align='center'>"+new Date(parseInt(res.codeprizedata[i].time)).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ")+"</td>"+
+						"<td align='center'>"+res.codeprizedata[i].activityid+"</td>"+
+						"<td align='center'>"+res.codeprizedata[i].prizeid+"</td>"+"</tr>");
+				$("#codeprizedata").append("<tr id='detail"+i+"' style='display:none;background-color:white;'><td align='center' colspan='2'>"+head+"("+(res.codeprizedata[i].from=="wx"?"微信":"支付宝")+")"+res.codeprizedata[i].openid+"</td>"+
+						"<td align='left' colspan='2'>扫码IP："+res.codeprizedata[i].ip+"<br>扫码地址："+decodeURIComponent(res.codeprizedata[i].addr)+"</td></tr>");
+			}
+		}
+		if (res.coderepositorydata!=undefined){
+			$("#coderepositorydata").append("<tr style='border-top:solid 1px grey;border-bottom:solid 1px grey'><td align='center'>批次号</td><td align='center'>产品编号</td><td align='center'>赋码状态</td><td align='center'>激活状态</td></tr>");
+			$("#coderepositorydata").append("<tr><td align='center'>"+res.coderepositorydata.linenum+"</td>"+
+						"<td align='center'>"+res.coderepositorydata.prodnum+"</td>"+
+						"<td align='center'>"+(res.coderepositorydata.active!="unknown"?"已赋码":"未赋码")+"</td>"+
+						"<td align='center'>"+(res.coderepositorydata.active=="true"?"已激活":"未激活")+"</td>"+"</tr>");
+		}
+		$(".showdetail").click(function(){
+			if ($("#"+$(this).attr("detailid")).is(':visible')){
+				$("#"+$(this).attr("detailid")).hide();
+				$(this).css("background-color","");
+			} else {
+				$(this).css("background-color","grey");
+				$("#"+$(this).attr("detailid")).show();
+			}
+		});
+	}
+</script>
+<div style="width:100%;text-align:center;"><input type="text" id="inputcode" placeholder="请输入二维码"/><input type="button" id="searchcode" value="查询"/>
+	<form id="theForm" enctype="multipart/form-data" method="post" action="">
+	或者上传二维码图片：<input type="file" name="codepic"/>
+					<input type="submit" id="thesubmit" style="display:none"/>
+					<input type="button" id="uploadcodepic" value="上传"/>
+	</form>
+</div>
+激活状态：
+<table id="coderepositorydata" style="width:100%;border-collapse:collapse">
+</table>
+参与信息：
+<table id="codeprizedata" style="width:100%;border-collapse:collapse">
+</table>

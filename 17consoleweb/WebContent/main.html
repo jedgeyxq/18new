@@ -1,0 +1,360 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>一物一码可视化数据平台3.0</title>
+	<link id="lsidicon" href="" rel="shortcut icon">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+  	<link rel="stylesheet" href="3rdcss/jquery-ui.css">
+  	<script type="text/javascript" src="3rdjs/jquery.js"></script>
+	<script type="text/javascript" src="3rdjs/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="3rdjs/datepicker-zh.js"></script>
+	<script type="text/javascript" src="3rdjs/aes.js"></script>
+	<script type="text/javascript" src="3rdjs/pbkdf2.js"></script>
+	<script type="text/javascript" src="3rdjs/AesUtil.js"></script>
+  	<script type="text/javascript" src="3rdjs/jsencrypt.js"></script>
+  	<script type="text/javascript" src="3rdjs/echarts.min.js"></script>
+  	<script type="text/javascript" src="3rdjs/china.js"></script>
+  	<script type="text/javascript" src="3rdjs/jquery.form.js"></script>
+  	<script type="text/javascript" src="myjs/core.js"></script>
+  	<script type="text/javascript" src="myjs/pc.js"></script>
+	<script type="text/javascript">
+  		$(document).ready(function(){
+  			if (localStorage.getItem("logo")!=null){
+  				$("#lsidicon").attr("href",localStorage.getItem("logo"));
+  				$("#logo").attr("src",localStorage.getItem("logo"));
+  				$("#logo").fadeIn(3000);
+  			}
+  			var i=1;
+  			while ($("#hfloating"+i).attr("id")!=undefined){
+  				$("#hfloating"+i).fadeIn(Math.random()*1000+500);
+  				i++;
+  			}
+  			$("#hfloating1").css("background-color","#ccc");
+			$(".hfloating").click(function(){
+				$(".vfloating").hide();
+				if ($("."+$(this).attr("id")).length==0){
+					$(".hfloating").css("background-color","white");
+					$(".hfloating").each(function(){
+						$(this).html($(this).attr("oldname"));
+					});
+					$(this).css("background-color","#ccc");
+					if ($(this).attr("toload")!=undefined){
+						$("#content").children().remove();
+						$("#content").load($(this).attr("toload"));
+						$("#content").fadeIn();
+					} else {
+						$("#content").hide();
+					}
+					if ($(this).attr("left")!=undefined){
+						$("#showsettings").show();
+						$(".setting").hide();
+						var settings = $(this).attr("left").split("#");
+						for (var i=0;i<settings.length;i++){
+							$("#"+settings[i]).show();
+						}
+					} else {
+						$("#showsettings").hide();
+						$("#hidesettings").hide();
+						$("#settings").hide();
+					}
+				} else {
+					$("."+$(this).attr("id")).each(function(){
+						if ($(this).attr("auth")==undefined||sessionStorage.getItem("self").indexOf($(this).attr("auth"))!=-1){
+							$(this).fadeIn();
+						}
+					});
+					$("."+$(this).attr("id")).attr("parentid",$(this).attr("id"));
+				}
+			});
+			$(".vfloating").click(function(){
+				$(".hfloating").each(function(){
+					$(this).html($(this).attr("oldname"));
+				});
+				$(".vfloating").hide();
+				$(".hfloating").css("background-color","white");
+				$("#"+$(this).attr("parentid")).attr("oldname",$("#"+$(this).attr("parentid")).html());
+				$("#"+$(this).attr("parentid")).html($(this).html());
+				$("#"+$(this).attr("parentid")).css("background-color","#ccc");
+				if ($(this).attr("toload")!=undefined){
+					$("#content").children().remove();
+					$("#content").load($(this).attr("toload"));
+					$("#content").fadeIn();
+				} else {
+					$("#content").hide();
+				}
+				if ($(this).attr("left")!=undefined){
+					$("#showsettings").show();
+					$(".setting").hide();
+					var settings = $(this).attr("left").split("#");
+					for (var i=0;i<settings.length;i++){
+						$("#"+settings[i]).show();
+					}
+				} else {
+					$("#showsettings").hide();
+					$("#hidesettings").hide();
+					$("#settings").hide();
+				}
+			});
+			$("#showsettings").click(function(){
+				$(this).hide();
+				$("#hidesettings").show();
+				$("#settings").show();
+			});
+			$("#hidesettings").click(function(){
+				$(this).hide();
+				$("#showsettings").show();
+				$("#settings").hide();
+			});
+			$( "#b" ).datepicker({
+				altField: "#b",
+		        altFormat: "yy-mm-dd",
+		      });
+			$( "#e" ).datepicker({
+				altField: "#e",
+		        altFormat: "yy-mm-dd",
+		      });
+			$("#refresh").click(function(){
+				var p = $("#p").val()=="all"?"all":pc.provinces[parseInt($("#p").val())].provinceName;
+				var params={
+								"from":$("input[name='from']:checked").val(),
+								"pc":$("input[name='pc']:checked").val(),
+								"province":p,
+								"city":$("#c").val(),
+								"begin":$("#b").val(),
+								"end":$("#e").val(),
+								"gender":$("#s").val(),
+								"activity":$("#a").val(),
+								"product":$("#d").val(),
+								"datatype":$("#dt").val()
+							};
+				refresh(params);
+			});
+			$("#content").click(function(){
+				$(".vfloating").hide();
+			});
+			initpc();
+			setTimeout(getscanposition, 1000);
+			setTimeout(realtime, 1000);
+  		});
+  		function initpc(){
+  			for (var i=0;i<pc.provinces.length;i++){
+  				$("#p").append("<option value='"+i+"'>"+pc.provinces[i].provinceName+"</option>");
+  			}
+  			$("#p").change(function(){
+  				$("#c").children().remove();
+  				$("#c").append("<option value='all'>全部城市</option>");
+  				if (pc.provinces[$(this).val()]!=undefined){
+	  				for (var i=0;i<pc.provinces[$(this).val()].citys.length;i++){
+	  	  				$("#c").append("<option value='"+pc.provinces[$(this).val()].citys[i].citysName+"'>"+pc.provinces[$(this).val()].citys[i].citysName+"</option>");
+	  	  			}
+  				}
+  	  		});
+  			var activities = eval("("+localStorage.getItem("activities")+")");
+  			for (var i=0;i<activities.length;i++){
+  				$("#a").append("<option value='"+activities[i].id+"'>"+(decodeURIComponent(activities[i].name).length>16?decodeURIComponent(activities[i].name).substring(0,16):decodeURIComponent(activities[i].name))+"</option>");
+  			}
+  			var products = eval("("+localStorage.getItem("products")+")");
+  			for (var i=0;i<products.length;i++){
+  				$("#d").append("<option value='"+products[i].id+"'>"+(decodeURIComponent(products[i].name).length>16?decodeURIComponent(products[i].name).substring(0,16):decodeURIComponent(products[i].name))+"</option>");
+  			}
+  		}
+  		function getscanposition(){
+  			post("/sp",{},renderscanposition);
+  		}
+  		function renderscanposition(res){
+  			for (var i = 0; i < res.total;i++){
+  				try{
+  					var data = res["data"+i].split("#");
+  					var from = data[0];
+	  				var lng = data[1];
+	  				var lat = data[2];
+	  				var province = decodeURIComponent(data[3]);
+	  				var city = decodeURIComponent(data[4]);
+	  				var strict = decodeURIComponent(data[5]);
+	  				var street = decodeURIComponent(data[6]);
+	  				var streetnumber = decodeURIComponent(data[7]);
+	  				var iconurl = data[8];
+	  				var nick = decodeURIComponent(data[9]);
+	  				var enc = data[10];
+	  				var ip = data[11];
+	  				var intime = data[12];
+	  				var playtime = data[13];
+	  				$("#baidumap")[0].contentWindow.add(from, lng,lat,province,city,strict,street,streetnumber,iconurl, nick,enc,ip,intime,playtime);
+				}catch(e){
+					//do nothing
+				}
+ 			}
+  			setTimeout(getscanposition, 5000);
+  		}
+  		function realtime(){
+  			post("/rt",{},renderealtime);
+  		}
+  		function renderealtime(res){
+  			if (res.wxscan!=$("#wxscan").html()){
+  				$("#wxscan").fadeOut(function(){
+  					$("#wxscan").html(res.wxscan);
+  					$("#wxscan").fadeIn();
+  				});
+  			}
+  			if (res.wxuser!=$("#wxuser").html()){
+  				$("#wxuser").fadeOut(function(){
+  					$("#wxuser").html(res.wxuser);
+  					$("#wxuser").fadeIn();
+  				});
+  			}
+  			if (res.wxenc!=$("#wxenc").html()){
+  				$("#wxenc").fadeOut(function(){
+  					$("#wxenc").html(res.wxenc);
+  					$("#wxenc").fadeIn();
+  				});
+  			}
+  			if (res.zfbscan!=$("#zfbscan").html()){
+  				$("#zfbscan").fadeOut(function(){
+  					$("#zfbscan").html(res.zfbscan);
+  					$("#zfbscan").fadeIn();
+  				});
+  			}
+  			if (res.zfbuser!=$("#zfbuser").html()){
+  				$("#zfbuser").fadeOut(function(){
+  					$("#zfbuser").html(res.zfbuser);
+  					$("#zfbuser").fadeIn();
+  				});
+  			}
+  			if (res.zfbenc!=$("#zfbenc").html()){
+  				$("#zfbenc").fadeOut(function(){
+  					$("#zfbenc").html(res.zfbenc);
+  					$("#zfbenc").fadeIn();
+  				});
+  			}
+  			setTimeout(realtime, 10000);
+  		}
+	</script>
+	<style type="text/css">
+	.hfloating{
+		position:absolute;
+		width:40px;
+		height:40px;
+		border-radius:20px;
+		top:10px;
+		display:none;
+		z-index:0;
+		cursor:pointer;
+		background-color:white;
+		opacity:0.9;
+	}
+	.vfloating{
+		position:absolute;
+		width:40px;
+		height:40px;
+		border-radius:20px;
+		display:none;
+		z-index:0;
+		cursor:pointer;
+		background-color:white;
+		opacity:0.9;
+	}
+	.round{
+		width:50px;
+		height:50px;
+		border-radius:25px;
+		cursor:pointer;
+		background-color:white;
+		opacity:0.9;
+	}
+	</style>
+</head>
+	<body style="margin:0;overflow:hidden;font-size:12pt;font-family:微软雅黑;">
+		<img id="logo" src="" style="display:none;position:absolute;width:60px;z-index:0;top:10px;left:10px;"/>
+		<div id="hfloating1" class="hfloating" style="position:absolute;z-index:1;left:80px;"><table style="width:100%;height:100%"><tr><td valign="middle" align="center">首页</td></tr></table></div>
+		<div id="hfloating2" class="hfloating" style="position:absolute;z-index:1;left:125px;">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">赋码</td></tr></table>
+		</div>
+		<div class="hfloating2 vfloating" auth="_sactive_" style="position:absolute;z-index:1;top:55px;left:125px;" toload="mypage/repository.html" left="b#e">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">查询</td></tr></table>
+		</div>
+		<div class="hfloating2 vfloating authmenu" auth="_active_" style="position:absolute;z-index:1;top:100px;left:125px;" toload="mypage/active.html" left="b#e">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">激活</td></tr></table>
+		</div>
+		<div id="hfloating3" class="hfloating" style="left:170px;"><table style="width:100%;height:100%"><tr><td valign="middle" align="center">扫码</td></tr></table></div>
+		<div class="hfloating3 vfloating" style="position:absolute;z-index:1;top:55px;left:170px;" toload="mypage/scan.html" left="from#pc#b#e#d">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">扫势</td></tr></table>
+		</div>
+		<div class="hfloating3 vfloating" style="position:absolute;z-index:1;top:100px;left:170px;" toload="mypage/china.html" left="from#pc#b#e#s#a#d#dt">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">热度</td></tr></table>
+		</div>
+		<div class="hfloating3 vfloating" style="position:absolute;z-index:1;top:145px;left:170px;" toload="mypage/trend.html" left="from#p#c#b#e#s#a#d#dt">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">趋势</td></tr></table>
+		</div>
+		<div class="hfloating3 vfloating" style="position:absolute;z-index:1;top:190px;left:170px;" toload="mypage/times.html" left="from#p#c#b#e#s#a#d">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">频次</td></tr></table>
+		</div>
+		<div class="hfloating3 vfloating" style="position:absolute;z-index:1;top:235px;left:170px;" toload="mypage/record.html">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">查询</td></tr></table>
+		</div>
+		<div class="hfloating3 vfloating authmenu" auth="_limit_" style="position:absolute;z-index:1;top:280px;left:170px;" toload="mypage/limit.html">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">上限</td></tr></table>
+		</div>
+		<div id="hfloating4" class="hfloating" style="position:absolute;z-index:1;left:215px;">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">活动</td></tr></table>
+		</div>
+		<div class="hfloating4 vfloating" style="position:absolute;z-index:1;top:55px;left:215px;" toload="mypage/pool.html">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">奖池</td></tr></table>
+		</div>
+		<div class="hfloating4 vfloating" style="position:absolute;z-index:1;top:100px;left:215px;" toload="mypage/search.html">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">查询</td></tr></table>
+		</div>
+		<div class="hfloating4 vfloating authmenu" auth="_td_tdu_" style="position:absolute;z-index:1;top:145px;left:215px;" toload="mypage/send.html">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">发货</td></tr></table>
+		</div>
+		<div id="hfloating5" class="hfloating" style="position:absolute;z-index:1;left:260px;">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">系统</td></tr></table>
+		</div>
+		<div class="hfloating5 vfloating" style="position:absolute;z-index:1;top:55px;left:260px;" toload="mypage/self.html">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">修改</td></tr></table>
+		</div>
+		<div class="hfloating5 vfloating authmenu" auth="_sul_suu_suc_" style="position:absolute;z-index:1;top:100px;left:260px;" toload="mypage/sysusers.html">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">管理</td></tr></table>
+		</div>
+		<div id="content" style="display:none;position:absolute;z-index:0;padding:10px;background-color:#ccc;opacity:0.9;top:55px;left:0px;right:0px;bottom:29px;overflow-x:hidden;overflow-y:auto;"></div>	
+		<iframe id="baidumap" src="mypage/baidu.html" scrolling="no" style="position:absolute;overflow:hidden;z-index:-1;border:0;" width="100%" height="100%"></iframe>
+		<div style="position:fixed;z-index:10;bottom:25px;white-space:nowrap;right:0px;width:200px;height:18px;padding:2px;text-align:right;overflow-x:auto;overflow-y:hidden;font-size:8pt;">&copy;2015-2017 猎时 Leasion&nbsp;</div>
+		<div style="position:fixed;z-index:10;bottom:0px;left:0px;white-space:nowrap;right:0px;width:100%;height:25px;padding:2px;background-color:white;opacity:0.9;text-align:center;overflow-x:auto;overflow-y:hidden;">扫码人次=[微信<span id="wxscan">...</span>][支付宝<span id="zfbscan">...</span>]&nbsp;&nbsp;授权人数=[微信<span id="wxuser">...</span>][支付宝<span id="zfbuser">...</span>]&nbsp;&nbsp;参与码数=[微信<span id="wxenc">...</span>][支付宝<span id="zfbenc">...</span>]</div>
+		<div id="showsettings" class="round" style="position:absolute;z-index:1;right:30px;bottom:60px;display:none;">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">&lt;过滤</td></tr></table>
+		</div>
+		<div id="hidesettings" class="round" style="position:absolute;z-index:1;right:30px;bottom:60px;display:none;">
+			<table style="width:100%;height:100%"><tr><td valign="middle" align="center">收起&gt;</td></tr></table>
+		</div>
+		<div id="settings" style="display:none;position:fixed;background-color:white;opacity:0.9;padding:10px;bottom:110px;right:30px;width:195px;overflow:hidden;">
+			<div id="from" class="setting"><table style="width:100%;border-bottom:solid 1px lightgrey;"><tr><td width="110"><input name="from" type="radio" value="wx" checked/>微信</td><td><input name="from" type="radio" value="zfb" />支付宝</td></tr></table></div>
+			<div id="pc" class="setting"><table style="width:100%;border-bottom:solid 1px lightgrey;"><tr><td width="110"><input name="pc" type="radio" value="p" checked/>省级行政区</td><td><input name="pc" type="radio" value="c" />市</td></tr></table></div>
+			<select id="p" class="setting">
+				<option value="all">全部省级行政区</option>
+			</select>
+			<select id="c" class="setting">
+				<option value="all">全部城市</option>
+			</select>
+			<input id="b" class="setting" type="text" placeholder="开始时间"/>
+			<input id="e" class="setting" type="text" placeholder="结束时间"/>
+			<select id="s" class="setting">
+				<option value="all">全部性别</option>
+				<option value="1">男</option>
+				<option value="2">女</option>
+				<option value="0">未知</option>
+			</select>
+			<select id="a" class="setting">
+				<option value="all">全部活动</option>
+			</select>
+			<select id="d" class="setting">
+				<option value="all">全部产品</option>
+			</select>
+			<select id="dt" class="setting">
+				<option value="luck">参与人次</option>
+				<option value="confirmprize">领奖人次</option>
+			</select>
+			<div style="text-align:right;"><input id="refresh" type="button" value="刷新"/></div>
+		</div>	
+
+	</body>
+</html>

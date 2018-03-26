@@ -1,0 +1,163 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#refresh").click();
+		$("#showscandata").click(function(){
+			if ($(this).attr("sel")=="true"){
+				$(this).css("background-color","#fff");
+				$("#scandata").hide();
+				$(this).attr("sel","false");
+			} else {
+				$(this).css("background-color","#ccc");
+				$("#scandata").show();
+				$(this).attr("sel","true");
+			}
+		});
+	});
+	function refresh(params){
+		$("#echarts").children().remove();
+		var thechart = echarts.init(document
+				.getElementById('echarts'));
+		var theoption = {
+		    timeline:{
+		        data:[],
+		        y2:"4px",
+		        label : {
+		        	rotate: 20,
+		        	formatter : function(s) {
+		        		var str = new Date(parseInt(s+"")).toLocaleString();
+		            	return str.substring(0, str.indexOf(" "));
+		            }
+		        },
+		        tooltip : {
+		        	'show':true,
+	        		formatter:function(s){
+	        			return s.value;
+		        	},
+		        },
+		        autoPlay : true,
+		        playInterval : 2000
+		    },
+		    options:[
+		        {
+		            title : {
+		              	x:'center',
+		                'text':'扫码人次',
+		                'subtext':''
+		            },
+		            tooltip : {'trigger':'axis'},
+		            legend : {
+		                x:'right',
+		                'data':['扫码人次'],
+		                'selected':{
+		                    '扫码人次':true
+		                }
+		            },
+		            toolbox : {
+		                'show':true, 
+		                orient : 'vertical',
+		                x: 'right', 
+		                y: 'center',
+		                'feature':{
+		                    'mark':{'show':true},
+		                    'dataView':{'show':true,'readOnly':false},
+		                    'magicType':{'show':true,'type':['line','bar','stack','tiled']},
+		                    'restore':{'show':true},
+		                    'saveAsImage':{'show':true}
+		                }
+		            },
+		            calculable : true,
+		            yAxis : [{
+		                'type':'category',
+		                'axisLabel':{'interval':0},
+		                'data':[]
+		            }],
+		            xAxis : [
+		                {
+		                    'type':'value',
+		                    'name':'扫码人次'
+		                }
+		            ],
+		            series : [
+		                {
+		                    'name':'扫码人次',
+		                    'type':'bar',
+		                    'markLine':{
+		                        symbol : ['none','none'],
+		                        symbolSize : [4, 2],
+		                        itemStyle : {
+		                            normal: {
+		                                lineStyle: {color:'blue'},
+		                                barBorderColor:'blue',
+		                                label:{
+		                                    position:'middle',
+		                                    formatter:function(params){
+		                                        return Math.round(params.value);
+		                                    },
+		                                    textStyle:{color:'blue'}
+		                                }
+		                            }
+		                        },
+		                        'data':[{'type':'average','name':'平均值'}]
+		                    },
+		                    'data': []
+		                }
+		            ]
+		        }
+		  	]    
+		};
+			              
+		thechart.showLoading();
+		post("/sc", params, function(res){
+			thechart.hideLoading();
+			theoption.timeline.data=res.timelines;
+			theoption.options[0].yAxis[0].data = res.yaxis;
+			$("#scandata").children().remove();
+			if (res.timelines.length>0){
+				var tr = $("<tr style='border-bottom:solid 1px grey;border-top:solid 1px grey;'></tr>");
+				tr.append("<td></td>");
+				for (var i=0;i<res.timelines.length;i++){
+					tr.append("<td align='center'>"+res.timelines[i]+"</td>");
+				}
+				$("#scandata").append(tr);
+			}
+			if (res.yaxis.length>0){
+				for (var i=0;i<res.yaxis.length;i++){
+					var tr = $("<tr></tr>");
+					tr.append("<td align='center'>"+res.yaxis[i]+"</td>");
+					for (var j=0;j<res.data.length;j++){
+						tr.append("<td align='center'>"+res.data[j][i]+"</td>");
+					}
+					$("#scandata").append(tr);
+				}
+				var firstdaytotal = 0;
+				for (var i=0;i<res.data[0].length;i++){
+					firstdaytotal+=res.data[0][i];
+				}
+				theoption.options[0].title.text = res.timelines[0]+"扫码人次："+firstdaytotal+"("+($("input[name='from']:checked").val()=="wx"?"微信":"支付宝")+")";
+				theoption.options[0].series[0].data = res.data[0];
+				for (var i=1;i<res.data.length;i++){
+					var daytotal = 0;
+					for (var j=0;j<res.data[i].length;j++){
+						daytotal+=res.data[i][j];
+					}
+					theoption.options.push(
+			        {
+			            title : {'text':res.timelines[i]+"扫码人次："+daytotal+"("+($("input[name='from']:checked").val()=="wx"?"微信":"支付宝")+")"},
+			            series : [
+			                {'data': res.data[i]}
+			            ]
+			        });
+				}
+			}
+			thechart.setOption(theoption, true);
+		});
+	}
+</script>
+<div id="echarts" style="width:100%;height:100%;"></div>
+<div id="showscandata" class="round" style="position:absolute;z-index:2;right:90px;bottom:30px;">
+	<table style="width:100%;height:100%"><tr><td valign="middle" align="center">表格</td></tr></table>
+</div>
+<div style="position:absolute;z-index:1;top:60px;left:0px;width:100%;background-color:white;overflow:auto;">
+	<table id="scandata" style="width:100%;display:none;">
+	</table>
+</div>

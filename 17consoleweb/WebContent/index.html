@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>数据平台</title>
+	<link id="lsidicon" href="" rel="shortcut icon">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+  	<script type="text/javascript" src="3rdjs/jquery.js"></script>
+	<script type="text/javascript" src="3rdjs/aes.js"></script>
+	<script type="text/javascript" src="3rdjs/pbkdf2.js"></script>
+	<script type="text/javascript" src="3rdjs/AesUtil.js"></script>
+  	<script type="text/javascript" src="3rdjs/jsencrypt.js"></script>
+  	<script type="text/javascript" src="myjs/core.js"></script>
+  	<script type="text/javascript">
+  		$(document).ready(function(){
+  			repeat1();
+  			repeat2();
+  			repeat3();
+  			resize();
+  			$(window).bind("resize",function(){
+  				resize();
+  			});
+  			if (localStorage.getItem("logo")!=null){
+  				$("#lsidicon").attr("href",localStorage.getItem("logo"));
+  				$("#logo").attr("src",localStorage.getItem("logo"));
+  				$("#logo").fadeIn(3000);
+  			}
+  			$("#passw0rd").keydown(function(e){
+				if(e.keyCode==13){
+				   $("#submit").click();
+				}
+			});
+  			$("#submit").click(function(){
+  				$("#error").hide();
+  				post("/l0gin", {"name":$("#name").val(),"passw0rd":$("#passw0rd").val()}, login);
+  			});	
+  			
+		});
+  		function login(res){
+  			if (res.result=="success"){
+  				localStorage.setItem("logo", "myimage/"+sessionStorage.getItem("eid")+".png");
+  				localStorage.setItem("activities", JSON.stringify(res.activities));
+  				localStorage.setItem("products", JSON.stringify(res.products));
+  				sessionStorage.setItem("self",res.self);
+  				window.location.href="main.html";
+  			} else {
+  				$("#error").fadeIn();
+  			}
+  		}
+  		function resize(){
+  			$("#form").css("top",($(window).height()-$("#form").height())/2);
+  			$("#form").css("left",($(window).width()-$("#form").width())/2);
+  		}
+  		function repeat1(){
+  			$("#floating1").css("top",Math.random()*($(window).height()-100));
+  			$("#floating1").css("left",Math.random()*($(window).width()-100));
+  			$("#floating1").css("background-color",'#'+Math.floor(Math.random()*0xffffff).toString(16));
+  			$("#floating1").fadeIn(3000, function(){
+				$("#floating1").fadeOut(3000, repeat1);
+			});
+  		}
+  		function repeat2(){
+  			$("#floating2").css("top",Math.random()*($(window).height()-60));
+  			$("#floating2").css("left",Math.random()*($(window).width()-60));
+  			$("#floating2").css("background-color",'#'+Math.floor(Math.random()*0xffffff).toString(16));
+  			$("#floating2").fadeIn(2300, function(){
+				$("#floating2").fadeOut(2300, repeat2);
+			});
+  		}
+  		function repeat3(){
+  			$("#floating3").css("top",Math.random()*($(window).height()-30));
+  			$("#floating3").css("left",Math.random()*($(window).width()-30));
+  			$("#floating3").css("background-color",'#'+Math.floor(Math.random()*0xffffff).toString(16));
+  			$("#floating3").fadeIn(1600, function(){
+				$("#floating3").fadeOut(1600, repeat3);
+			});
+  		}
+	</script>
+</head>
+	<body style="margin:0;font-size:12pt;font-family:微软雅黑;overflow:hidden;">
+		<div style="position:absolute;width:100%;height:100%;overflow:hidden;">
+			<div id="floating1" style="position:absolute;width:100px;height:100px;border-radius:50px;display:none;z-index:-1"></div>
+			<div id="floating2" style="position:absolute;width:60px;height:60px;border-radius:30px;display:none;z-index:-1"></div>
+			<div id="floating3" style="position:absolute;width:30px;height:30px;border-radius:15px;display:none;z-index:-1"></div>
+			<img id="logo" src="" style="display:none;position:absolute;width:60px;z-index:0;top:10px;left:10px;"/>
+			<div id="form" style="position:absolute;text-align:center;z-index:9999;width:320px;height:200px;">
+				<div style="margin:5px;">数据平台</div>
+				<div style="margin:5px;"><input id="name" type="text" placeholder="用户名"/></div>
+				<div style="margin:5px;"><input id="passw0rd" type="password" placeholder="密码"/></div>
+				<div style="margin:5px;"><input id="submit" type="button" value="登录"/></div>
+				<div id="error" style="margin:5px;color:#c33;display:none;">请使用正确的用户名和密码</div>
+			</div>
+		</div>
+	</body>
+</html>

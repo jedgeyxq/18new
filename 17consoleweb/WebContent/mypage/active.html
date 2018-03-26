@@ -1,0 +1,60 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		var products = eval("("+localStorage.getItem("products")+")");
+			for (var i=0;i<products.length;i++){
+				$(".activeprod").append("<option value='"+products[i].id+"'>"+products[i].name+"</option>");
+			}
+		$("#refresh").click();
+	});
+	function refresh(params){
+		$("#toactivetitle").html("加载中");
+		$("#inactivedata").children().remove();||||
+		$("#inactivedata").append("<tr style='border-top:solid 1px grey;border-bottom:solid 1px grey;'><td align='center'>产线编号</td><td align='center'>批次号</td><td align='center'>产品编号</td><td align='center'>赋码数量</td></tr>");
+		post("/ta",params,rendertoactive);
+	}
+	function rendertoactive(res){
+		"toactivetitle"
+		if (res.codeprizedata!=undefined&&res.codeprizedata.length>0){
+			$("#codeprizedata").append("<tr style='border-top:solid 1px grey;border-bottom:solid 1px grey'><td align='center'>昵称</td><td align='center'>参与时间</td><td align='center'>活动编号</td><td align='center'>奖品编号</td></tr>");
+			for (var i=0;i<res.codeprizedata.length;i++){
+				var head = "<div style='border-radius:14px;width:28px;height:28px;overflow:hidden;'><img style='width:28px;height:28px;' src='"+res.codeprizedata[i].headimgurl+"'/></div>";
+				var nick = decodeURIComponent(res.codeprizedata[i].nick);
+				$("#codeprizedata").append("<tr detailid='detail"+i+"' class='showdetail' style='cursor:pointer'><td align='center'>"+nick+"</td>"+
+						"<td align='center'>"+new Date(parseInt(res.codeprizedata[i].time)).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ")+"</td>"+
+						"<td align='center'>"+res.codeprizedata[i].activityid+"</td>"+
+						"<td align='center'>"+res.codeprizedata[i].prizeid+"</td>"+"</tr>");
+				$("#codeprizedata").append("<tr id='detail"+i+"' style='display:none;background-color:white;'><td align='center' colspan='2'>"+head+"("+(res.codeprizedata[i].from=="wx"?"微信":"支付宝")+")"+res.codeprizedata[i].openid+"</td>"+
+						"<td align='left' colspan='2'>扫码IP："+res.codeprizedata[i].ip+"<br>扫码地址："+decodeURIComponent(res.codeprizedata[i].addr)+"</td></tr>");
+			}
+		}
+		if (res.coderepositorydata!=undefined){
+			$("#coderepositorydata").append("<tr style='border-top:solid 1px grey;border-bottom:solid 1px grey'><td align='center'>产线编号</td><td align='center'>产品编号</td><td align='center'>赋码状态</td><td align='center'>激活状态</td></tr>");
+			$("#coderepositorydata").append("<tr><td align='center'>"+res.coderepositorydata.linenum+"</td>"+
+						"<td align='center'>"+res.coderepositorydata.prodnum+"</td>"+
+						"<td align='center'>已赋码</td>"+
+						"<td align='center'>"+(res.coderepositorydata.active=="true"?"已激活":"未激活")+"</td>"+"</tr>");
+		}
+		$(".showdetail").click(function(){
+			if ($("#"+$(this).attr("detailid")).is(':visible')){
+				$("#"+$(this).attr("detailid")).hide();
+				$(this).css("background-color","");
+			} else {
+				$(this).css("background-color","grey");
+				$("#"+$(this).attr("detailid")).show();
+			}
+		});
+	}
+</script>
+<div id="toactivetitle" style="text-align:center"></div>
+<table id="inactivedata" style="width:100%;border-collapse:collapse">
+</table>
+<table style="width:100%;border-collapse:collapse;">
+	激活为<select class="activeprod"></select><select class="activeprod"></select>
+	<input type="button" value="立即激活"/>
+	延迟<select>
+	<option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option>
+	<option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option>
+	</select>后<input type="button" value="激活"/>
+</table>
+<table id="toactive" style="width:100%;border-collapse:collapse">
+</table>

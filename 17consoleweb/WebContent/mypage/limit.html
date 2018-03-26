@@ -1,0 +1,51 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		refresh();
+		$("input:radio[name='fromlimit']").click(function(){
+	   		refresh();
+	  	});
+		$("input:radio[name='typelimit']").click(function(){
+	   		refresh();
+	  	});
+	});
+	function refresh(){
+		$("#sortedatalimit").children().remove();
+		$(".loadinglimit").html("加载中...");
+		post("/limit",
+				{
+					"table":"count",
+					"col":$("input[name='typelimit']:checked").val()+$("input[name='fromlimit']:checked").val()
+				},
+		renderlimit);
+	}
+	function renderlimit(res){
+		$("#daylimit").html("日上限："+res["lsid.limit."+$("input[name='typelimit']:checked").val()+".day"]);
+		$("#monthlimit").html("月上限："+res["lsid.limit."+$("input[name='typelimit']:checked").val()+".month"]);
+		$("#blacklimit").html("黑名单："+res["lsid.black."+$("input[name='typelimit']:checked").val()]);
+		$("#whitelimit").html("白名单："+res["lsid.white."+$("input[name='typelimit']:checked").val()]);
+		for (var i=0;i<res.data.length;i++){
+			$("#sortedatalimit").append("<tr><td align='center' style='width:50%;WORD-WRAP: break-word;'>"+res.data[i].key+"</td><td align='center' style='width:50%;WORD-WRAP: break-word;'>"+res.data[i].value+"</td></tr>");
+		}
+		if (res.data.length==0){
+			$("#sortedatalimit").append("<tr><td align='center'>无数据</td></tr>");
+		}
+	}
+</script>
+<div><table style="border-bottom:solid 1px grey;">
+	<tr>
+		<td width="80"><input name="fromlimit" type="radio" value="wx" checked/>微信</td>
+		<td colspan="2"><input name="fromlimit" type="radio" value="zfb" />支付宝</td>
+	</tr>
+	<tr>
+		<td width="80"><input name="typelimit" type="radio" value="penc_" checked/>Code</td>
+		<td width="80"><input name="typelimit" type="radio" value="puser_" />ID</td>
+		<td width="80"><input name="typelimit" type="radio" value="pip_" />IP</td>
+	</tr>
+</table></div>
+<div id="daylimit" class="loadinglimit"></div>
+<div id="monthlimit" class="loadinglimit"></div>
+<div id="blacklimit" class="loadinglimit"></div>
+<div id="whitelimit" class="loadinglimit"></div>
+<div>参与次数从高到低排序：</div>
+<table id="sortedatalimit" style="width:100%;TABLE-LAYOUT: fixed;border-collapse:collapse;border-top:solid 1px grey;">
+</table>

@@ -1,0 +1,50 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		if (sessionStorage.getItem("self")!=null){
+			var parts = sessionStorage.getItem("self").split("#");
+			$("#name").val(decodeURIComponent(parts[2]));
+			$("#uname").val(decodeURIComponent(parts[3]));
+			$("#dept").val(decodeURIComponent(parts[4]));
+			$("#contact").val(decodeURIComponent(parts[5]));
+		}
+		$("#changepassword").click(function(){
+			if ($("#newpassword").val()==""||$("#newpassword").val().indexOf(" ")!=-1||$("#newpassword").val()!=$("#newpassword2").val()){
+				alert("两次输入的新密码不相同或者包含空格");
+			} else {
+				post("/cp",{"oldpassword":aesencrypt($("#oldpassword").val()),"newpassword":aesencrypt($("#newpassword").val())},afterchangepassword);
+			}
+		});
+		$("#changeself").click(function(){
+			if ($("#name").val()==""||$("#name").val().indexOf(" ")!=-1){
+				alert("登录名不能为空或者包含空格");
+			} else {
+				post("/cs",{"name":$("#name").val(),"uname":$("#uname").val(),"dept":$("#dept").val(),"contact":$("#contact").val()},afterchangeself);
+			}
+		});
+		
+	});
+	function afterchangepassword(res){
+		$("#oldpassword").val("");
+		$("#newpassword").val("");
+		$("#newpassword2").val("");
+		alert("修改成功");
+	}
+	function afterchangeself(res){
+		sessionStorage.setItem("self",res.self);
+		alert("保存成功");
+	}
+	
+</script>
+<div style="width:100%;text-align:center;">
+	<input type="password" id="oldpassword" placeholder="请输入旧密码"/>
+	<input type="password" id="newpassword" placeholder="请输入新密码"/>
+	<input type="password" id="newpassword2" placeholder="请确认新密码"/>
+	<input type="button" id="changepassword" value="修改密码"/>
+</div>
+<div style="width:100%;text-align:center;">
+	<input type="text" id="name" placeholder="登录名"/>
+	<input type="text" id="uname" placeholder="姓名"/>
+	<input type="text" id="dept" placeholder="部门"/>
+	<input type="text" id="contact" placeholder="联系方式"/>
+	<input type="button" id="changeself" value="保存修改"/>
+</div>

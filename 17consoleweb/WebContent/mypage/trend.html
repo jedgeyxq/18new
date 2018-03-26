@@ -1,0 +1,64 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#refresh").click();
+	});
+	function refresh(params){
+		$("#echarts").children().remove();
+		var thechart = echarts.init(document
+				.getElementById('echarts'));
+		var theoption = {
+			title : {
+		    	x:'center',
+		        text: '参与趋势',
+		        subtext: ''
+		    },
+		    tooltip : {
+		        trigger: 'axis'
+		    },
+		    legend: {
+		    	x:'right',
+		        data:[]
+		    },
+		    toolbox: {
+		        show : true,
+		        orient : 'vertical',
+	            x: 'right',
+	            y: 'center',
+		        feature : {
+		            mark : {show: true},
+		            dataView : {show: true, readOnly: false},
+		            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+		            restore : {show: true},
+		            saveAsImage : {show: true}
+		        }
+		    },
+		    calculable : true,
+		    xAxis : [
+		        {
+		            type : 'category',
+		            boundaryGap : false,
+		            data : []
+		        }
+		    ],
+		    yAxis : [
+		        {
+		            type : 'value'
+		        }
+		    ],
+		    series : []
+		};
+		                    
+		thechart.showLoading();
+		post("/tr", params, function(res){
+			thechart.hideLoading();
+			theoption.title.text="参与趋势"+"("+($("input[name='from']:checked").val()=="wx"?"微信":"支付宝")+")";
+			theoption.legend.data = res.data.legend;
+			theoption.xAxis[0].data = res.data.xaxis;
+			for (var i=0;i<res.data.legend.length;i++){
+				theoption.series.push({"name":res.data.legend[i],"smooth":true,"type":"line","stack":"总量","data":res.data[res.data.legend[i]]});
+			}
+			thechart.setOption(theoption, true);
+		});
+	}
+</script>
+<div id="echarts" style="width:100%;height:100%;"></div>

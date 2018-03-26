@@ -1,0 +1,97 @@
+<script type="text/javascript">
+	var startrow = 0;
+	$(document).ready(function(){
+		$( "#searchbydate" ).datepicker({
+			altField: "#searchbydate",
+	        altFormat: "yy-mm-dd",
+	      });
+		$( "#searchbydate" ).val(defaultdate());
+		$("#searchdata").click(function(){
+			$("#searchresultdata").children().remove();
+			$("#searchresultdata").append("<tr style='border-top:solid 1px grey;border-bottom:solid 1px grey'><td align='center'>昵称</td><td align='center'>参与时间</td><td align='center'>参与IP和省市</td><td align='center'>参与结果</td><td align='center'>状态</td></tr>");
+			startrow = 0;
+			$(this).attr("value","加载中");
+			gosearch();
+		});
+		$("#loadmoredata").click(function(){
+			startrow += 100;
+			$(this).attr("value","加载中");
+			gosearch();
+		});
+	});
+    function defaultdate(){  
+        var datetime = new Date();  
+       	var year = datetime.getFullYear();  
+        var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;  
+        var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();  
+        var hour = datetime.getHours()< 10 ? "0" + datetime.getHours() : datetime.getHours();  
+        var minute = datetime.getMinutes()< 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();  
+        var second = datetime.getSeconds()< 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();  
+        return year + "-" + month + "-" + date;  
+    }  
+	function gosearch(){
+		post("/s",{
+			"day":$("#searchbydate").val(),
+			"startrow":startrow,
+			"code":$("#searchbycode").val(),
+			"mobile":$("#searchbymobile").val(),
+			"nick":$("#searchbynick").val()
+		},searchresultdata);		
+	}
+	function searchresultdata(res){
+		$("#searchdata").attr("value","查询");
+		$("#loadmoredata").attr("value","加载更多");
+		if (res.data!=undefined&&res.data.length>0){
+			for (var i=0;i<res.data.length;i++){
+				var head = "<div style='border-radius:14px;width:28px;height:28px;overflow:hidden;'><img style='width:28px;height:28px;' src='"+res.data[i].headimgurl+"'/></div>";
+				var nick = res.data[i].nick;
+				var sysreq = res.data[i].sysreq;
+				if (sysreq.indexOf("confirm")!=-1){
+					sysreq = "";
+				}
+				var userinput = res.data[i].userinput;
+				if (userinput=="finished"){
+					userinput = "已完成";
+				}
+				var st = decodeURIComponent(res.data[i].status);
+				if (st.indexOf("success")!=-1){
+					st = "已到账";
+				}
+				if (st.indexOf("fail")!=-1){
+					if (st.indexOf("NOTENOUGH")!=-1){
+						st = "企业商户号余额不足";
+					} else if (st.indexOf("SENDNUM_LIMIT")!=-1){
+						st = "达当日上限";
+					} else if (st.indexOf("V2_ACCOUNT_SIMPLE_BAN")!=-1){
+						st = "用户未实名";
+					} else if (st.indexOf("FREQ_LIMIT")!=-1){
+						st = "到账中";
+					} else {
+						st = "联系猎时";
+					}
+				}
+				$("#searchresultdata").append("<tr><td align='center'>"+head+nick+"</td>"+
+						"<td align='center'>"+new Date(parseInt(res.data[i].time)).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ")+"</td>"+
+						"<td align='center'>"+res.data[i].ip+"<br>"+decodeURIComponent(res.data[i].addr)+"</td>"+
+						"<td align='center'>"+decodeURIComponent(res.data[i].prize)+"<br>"+sysreq+"</td>"+
+				"<td align='center'>"+userinput+"<br>"+st+"</td>"+"</tr>");
+			}
+			$("#loadmoredata").show();
+		} else {
+			$("#loadmoredata").hide();
+			$("#searchresultdata").append("<tr><td align='center' colspan='5'>无更多数据</td></tr>");
+		}
+	}
+</script>
+<div style="width:100%;text-align:center;">
+	<input id="searchbydate" type="text" placeholder="日期(yyyy-MM-dd)"/>
+	<input type="text" id="searchbycode" placeholder="二维码"/>
+	<input type="text" id="searchbymobile" placeholder="手机"/>
+	<input type="text" id="searchbynick" placeholder="昵称"/>
+	<input type="button" id="searchdata" startrow="0" value="查询"/>
+</div>
+<table id="searchresultdata" style="width:100%;border-collapse:collapse">
+</table>
+<div style="width:100%;text-align:center;">
+	<input type="button" id="loadmoredata" style="display:none" value="加载更多"/>
+</div>

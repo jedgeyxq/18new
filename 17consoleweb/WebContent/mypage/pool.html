@@ -1,0 +1,30 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#pooldata").children().remove();
+		$("#pooldata").append("<tr><td align='center' colspan='4'>加载中</td></tr>");
+		post("/pool",{},pooldata);		
+	});
+	function pooldata(res){
+		if (res.data!=undefined&&res.data.length>0){
+			$("#pooldata").children().remove();
+			for (var i=0;i<res.data.length;i++){
+				if (res.data[i].type!="invisible"){
+					$("#pooldata").append("<tr><td colspan='4'>"+res.data[i].type+"</td></tr>");
+					$("#pooldata").append("<tr><td colspan='4'>"+new Date(parseInt(res.data[i].start)).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ")+"到"+new Date(parseInt(res.data[i].end)).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ")+"</td></tr>");
+					//$("#pooldata").append("<tr style='border-bottom:solid 1px grey'><td colspan='4'>"+res.data[i].rule+"</td></tr>");
+					$("#pooldata").append("<tr style='border-top:solid 1px grey;border-bottom:solid 1px grey'><td align='center' width='25%'>奖项</td><td align='center' width='25%'>预设</td><td align='center' width='25%'>实际</td><td align='center' width='25%'>剩余</td></tr>");
+					if (res.data[i].prizes!=undefined&&res.data[i].prizes.length>0){
+						for (var j=0;j<res.data[i].prizes.length;j++){
+							$("#pooldata").append("<tr><td align='center'>"+res.data[i].prizes[j].name+"</td><td align='center'>"+(res.data[i].prizes[j].planratio=="0E+1%"?"0%":res.data[i].prizes[j].planratio)+"</td><td align='center'>"+res.data[i].prizes[j].realratio+"</td><td align='center'>"+res.data[i].prizes[j].remaining+"</td></tr>");
+						}		
+					}
+					$("#pooldata").append("<tr><td align='center' colspan='4'>&nbsp;</td></tr>");
+				}
+			}
+		} else {
+			$("#pooldata").append("<tr><td align='center' colspan='4'>无数据</td></tr>");
+		}
+	}
+</script>
+<table id="pooldata" style="width:100%;border-collapse:collapse">
+</table>

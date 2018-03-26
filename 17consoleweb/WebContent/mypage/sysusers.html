@@ -1,0 +1,86 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		var td = $("<td align='center'></td>");
+		$(".authmenu").each(function(){
+			if (sessionStorage.getItem("self").indexOf($(this).attr("auth"))!=-1){
+				td.append("<input type='checkbox' name='authnew' value='"+$(this).attr("auth")+"'/>"+$(this).find("td").html()+"&nbsp;&nbsp;");
+			}
+		});
+		td.append("<input type='button' id='creatsysuser' value='新建用户'/>");
+		$("#sysusernew").append($("<tr style='border-bottom:solid 1px grey'></tr>").append(td));
+
+		$("#creatsysuser").click(function(){
+			if ($("#name").val()==""||$("#name").val().indexOf(" ")!=-1||
+					$("#password").val()==""||$("#password").val().indexOf(" ")!=-1){
+				alert("登录名和密码不能为空或者包含空格");
+			} else {
+				var auth="";
+				$("[name='authnew']").each(function(){ 
+				 	if ($(this).is(':checked')){
+						auth+=$(this).val();
+				 	}
+				});    
+				post("/suc",{"name":$("#name").val(),"password":aesencrypt($("#password").val()),"uname":$("#uname").val(),"dept":$("#dept").val(),"contact":$("#contact").val(),"auth":auth},
+						function(res){
+					$("#name").val("");
+					$("#password").val("");
+					$("#uname").val("");
+					$("#dept").val("");
+					$("#contact").val("");
+					$("[name='authnew']").attr("checked", false);
+					setTimeout(list,1000);
+				});
+			}
+		});
+		list();
+	});
+	function list(){
+		$("#sysuserdata").children().remove();
+		$("#sysuserdata").append("<tr style='border-bottom:solid 1px grey'><td align='center'>登录名</td><td align='center'>姓名</td><td align='center'>部门</td><td align='center'>联系方式</td></tr>");
+		post("/sul",{},rendersysuserdata);
+	}
+	function rendersysuserdata(res){
+		for (var i=0; i<res.data.length;i++){
+			var parts = res.data[i].split("#");
+			var id = parts[0];
+			var name = decodeURIComponent(parts[2]);
+			var uname = decodeURIComponent(parts[3]);
+			var dept = decodeURIComponent(parts[4]);
+			var contact = decodeURIComponent(parts[5]);
+			var auth = parts[6];
+			$("#sysuserdata").append("<tr><td align='center'>"+name+"</td><td align='center'>"+uname+"</td><td align='center'>"+dept+"</td><td align='center'>"+contact+"</td></tr>");
+			var td = $("<td align='center' colspan='4'></td>");
+			$(".authmenu").each(function(){
+				if (sessionStorage.getItem("self").indexOf($(this).attr("auth"))!=-1){
+					td.append("<input type='checkbox' name='authupdate"+id+"' value='"+$(this).attr("auth")+"' "+ (auth.indexOf($(this).attr("auth"))==-1?"":"checked=''")+"'/>"+$(this).find("td").html()+"&nbsp;&nbsp;");
+				}
+			});
+			td.append("<input type='button' class='creatsysuser' id='"+id+"' name='"+name+"' uname='"+uname+"' dept='"+dept+"' contact='"+contact+"' value='修改授权'/>");
+			$("#sysuserdata").append($("<tr style='border-bottom:solid 1px grey'></tr>").append(td));
+		}
+		$(".creatsysuser").click(function(){
+			var auth="";
+			$("[name='authupdate"+$(this).attr("id")+"']").each(function(){  
+				if ($(this).is(':checked')){
+					auth+=$(this).val();
+				}
+			});  
+			post("/suu",{"name":$(this).attr("name"),"id":$(this).attr("id"),"uname":$(this).attr("uname"),"dept":$(this).attr("dept"),"contact":$(this).attr("contact"),"auth":auth},
+				function(){
+				alert("授权成功");
+			});
+		});
+	}
+</script>
+<table id="sysusernew" style="width:100%;border-collapse:collapse">
+	<tr><td align="center">
+	<input type="text" id="name" placeholder="登录名"/>
+	<input type="password" id="password" placeholder="密码"/>
+	<input type="text" id="uname" placeholder="姓名"/>
+	<input type="text" id="dept" placeholder="部门"/>
+	<input type="text" id="contact" placeholder="联系方式"/>
+	</td></tr>
+	
+</table>
+<table id="sysuserdata" style="width:100%;border-collapse:collapse">
+</table>
