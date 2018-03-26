@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>17autoconfigserver</display-name>
+  <filter>
+    <filter-name>captainfilter</filter-name>
+    <filter-class>
+	 	com.lsid.filter.autoconfig.server.CaptainFilter
+	</filter-class>
+  </filter>
+  <filter>
+    <filter-name>getfilter</filter-name>
+    <filter-class>
+	 	com.lsid.filter.autoconfig.server.GetFilter
+	</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>captainfilter</filter-name>
+    <url-pattern>/shutmedown</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>captainfilter</filter-name>
+    <url-pattern>/whoiscaptain</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>getfilter</filter-name>
+    <url-pattern>/get</url-pattern>
+  </filter-mapping>
+  <!--  
+   <listener>
+    <listener-class>
+		 	 com.lsid.listener.CheckServer
+		</listener-class>
+  </listener>
+  -->
+</web-app>
