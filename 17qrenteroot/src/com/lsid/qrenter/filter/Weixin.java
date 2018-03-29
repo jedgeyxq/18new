@@ -217,7 +217,7 @@ public class Weixin implements Filter {
     					
 				String data = AutoConfig.dataweixininit(eid, enc, enca, encna, useragent, ip, loc);
 				AutoConfig.incrementcache(eid, enc, "count", enc, "senc"+AutoConfig.SPLIT_HBASE+AutoConfig.getfrom(data.split(AutoConfig.SPLIT)), 1);
-				response.sendRedirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid="+AutoConfig.config(null, "lsid.uuwxid.appid")+"&redirect_uri="+AutoConfig.config(eid, "lsid.host.userentry")+"ticket/"+AutoConfig.generateticket(data, "fixedexpire")+"&response_type=code&scope=snsapi_base&state="+new Random().nextInt(10000)+"#wechat_redirect");
+				response.sendRedirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid="+AutoConfig.config(null, "lsid.uuwxid.appid")+"&redirect_uri="+AutoConfig.config(null, "lsid.host.userentry")+"ticket/"+AutoConfig.generateticket(data, "fixedexpire")+"&response_type=code&scope=snsapi_base&state="+new Random().nextInt(10000)+"#wechat_redirect");
 			}
     	}catch(Exception ex){
     		AutoConfig.log(ex, "Failed in processing request=["+request.getRequestURI()+"] due to below exception:");
