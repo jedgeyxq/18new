@@ -66,12 +66,7 @@ public class Weixin implements Filter {
 	    	
 	    	if (request.getRequestURI().startsWith("/toauthback/")){
 	    		String ticket=request.getRequestURI().substring(12);
-	    	//	String param=request.getRequestURI();
-	    	//	System.out.println("param11========"+param);
 	    		String param2=request.getQueryString();
-	    	//	System.out.println("param2========"+param2);
-//	    		String hosturl=request.getParameter("state");
-//	    		System.out.println("hosturl========"+hosturl);
 	    		String thirduri=AutoConfig.readticket(ticket);
 	    		response.sendRedirect(thirduri+"?"+param2);
 	    		return;
@@ -106,9 +101,6 @@ public class Weixin implements Filter {
 							Integer.parseInt(AutoConfig.config(null, "lsid.interface.wx.connectimeoutinsec")),
 							Integer.parseInt(AutoConfig.config(null, "lsid.interface.wx.socketimeoutinsec")),
 							"eid",eid,"wxcode",request.getParameter("code"),"keyprefix","lsid.uuwxid");
-					if(eid.equals("ls")){
-						System.out.println("uuid==="+uuid);
-					}
 					String nextdata = AutoConfig.databeforeinfo(data, uuid);
 					AutoConfig.nocache(eid, "scan", enc+AutoConfig.SPLIT_HBASE+uuid+AutoConfig.SPLIT_HBASE+scantime, "s", nextdata);
 					String userinfoplayid=AutoConfig.cacheuserdata(eid, uuid, "userinfo", uuid, AutoConfig.getfrom(d));
@@ -174,18 +166,11 @@ public class Weixin implements Filter {
 	    			String ticket = AutoConfig.generateticket(hosturl,"fixedexpire");
 	    			for(int i=0;i<param.length;i++){
 	    				if(param[i].indexOf("redirect_uri")!=-1){
-	    					param[i]="redirect_uri=http://0k6.cn/toauthback/"+ticket;
+	    					param[i]="redirect_uri="+AutoConfig.config(null, "lsid.host.userentry")+"toauthback/"+ticket;
 	    				}
-//	    				if(param[i].indexOf("state")!=-1){
-//	    					param[i]="state="+hosturl;
-//	    				}
 	    				params+=param[i]+"&";
 	    			}	    			
 	    			params=params.substring(0,params.length()-1);
-//	    			if(params.indexOf("state")==-1){
-//	    				params=params+"&state="+hosturl;
-//	    			}
-	    			System.out.println("params==="+params);
 	    			response.sendRedirect("https://open.weixin.qq.com/connect/oauth2/authorize?"+params);
 					return;
 	    		}
@@ -232,14 +217,9 @@ public class Weixin implements Filter {
     					
 				String data = AutoConfig.dataweixininit(eid, enc, enca, encna, useragent, ip, loc);
 				AutoConfig.incrementcache(eid, enc, "count", enc, "senc"+AutoConfig.SPLIT_HBASE+AutoConfig.getfrom(data.split(AutoConfig.SPLIT)), 1);
-				String wxauthorize = AutoConfig.config(eid, "lsid.redirect.wxauthorize");
-				if (wxauthorize==null||wxauthorize.trim().isEmpty()){
-					wxauthorize="https://open.weixin.qq.com/connect/oauth2/authorize";
-				}
-				response.sendRedirect(wxauthorize+"?appid="+AutoConfig.config(null, "lsid.uuwxid.appid")+"&redirect_uri="+AutoConfig.config(eid, "lsid.host.userentry")+"ticket/"+AutoConfig.generateticket(data, "fixedexpire")+"&response_type=code&scope=snsapi_base&state="+new Random().nextInt(10000)+"#wechat_redirect");
+				response.sendRedirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid="+AutoConfig.config(null, "lsid.uuwxid.appid")+"&redirect_uri="+AutoConfig.config(eid, "lsid.host.userentry")+"ticket/"+AutoConfig.generateticket(data, "fixedexpire")+"&response_type=code&scope=snsapi_base&state="+new Random().nextInt(10000)+"#wechat_redirect");
 			}
     	}catch(Exception ex){
-    		ex.printStackTrace();
     		AutoConfig.log(ex, "Failed in processing request=["+request.getRequestURI()+"] due to below exception:");
     		response.sendRedirect(AutoConfig.config(eid, "lsid.host.userplay")+AutoConfig.config(eid, "lsid.page.error")+AutoConfig.SPLIT+URLEncoder.encode(ex.getMessage(),"UTF-8"));
     	}
