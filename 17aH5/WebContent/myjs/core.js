@@ -154,8 +154,8 @@ $(document).ready(function(){
 				//post(null, {url4wxjssdk:window.location.href}, initwxjssdk);
 				//post(null, {}, init);
 				var data = {"result":"success","7tasksresult":"none","activedate":"2018-03-13 18:18:46","nickname":"Richard","prodid":"testp","lng":"121.48789948999993","tasks":{"task0":1,"task1":1,"task2":1,"task3":1,"task4":1,"task6":1,"task5":1},"pools":[{"id":"0","ticket":"d1faacdd940347e88e302907ddc4f216","require":"","type":"task"}],"eid":"t2","city":"%E6%9C%9D%E9%98%B3","playid":"YnHz8F7D92gmcDluJ%2Bofn8tXn9%2BXkKX8hEVD%2B6cOE9o%3D","countenc":0,"prizes":[],"credit":0,"headimgurl":"http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqoyRqfH5icpBXe6cxyHV8nGicNrkqFV45Qa2E9vxYqZzx5leYxUjZnlzNAz1Gy6L5D9o8xeE6EZvdQ/132","lat":"31.249161578948787","7tasks":"213239bea1814323824f620abc7ca720"};
-				data.pools=[];
-				data.tasks={"task0":0,"task1":0,"task2":0,"task3":0,"task4":0,"task6":0,"task5":0};
+				//data.pools=[];
+				//data.tasks={"task0":0,"task1":0,"task2":0,"task3":0,"task4":0,"task6":0,"task5":0};
 				sessionStorage.setItem("data-init",JSON.stringify(data));
 				init(data);
 			});

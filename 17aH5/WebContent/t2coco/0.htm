@@ -30,6 +30,123 @@
 				95%   {background-image:url(images/coco3.png);}
 				100%   {background-image:url(images/coco4.png);}
 			}
+			
+			.task0{
+				width:300px;
+				height:300px;
+				background-size:100% 100%;
+				background-repeat:no-repeat;
+				animation: tasking0 1.5s ease 0s forwards;
+			}
+			@keyframes tasking0
+			{
+				0%   {background-image:url(images/task00.png);}
+				10%   {background-image:url(images/task01.png);}
+				20%   {background-image:url(images/task02.png);}
+				30%   {background-image:url(images/task03.png);}
+				40%   {background-image:url(images/task04.png);}
+				100%   {background-image:url(images/task04.png);}
+			}
+
+			.task1{
+				width:300px;
+				height:300px;
+				background-size:100% 100%;
+				background-repeat:no-repeat;
+				animation: tasking1 1s ease 0s forwards;
+			}
+			@keyframes tasking1
+			{
+				0%   {background-image:url(images/task10.png);}
+				10%   {background-image:url(images/task11.png);}
+				20%   {background-image:url(images/task12.png);}
+				30%   {background-image:url(images/task12.png);}
+				100%   {background-image:url(images/task13.png);}
+			}
+
+			.task2{
+				width:300px;
+				height:300px;
+				background-size:100% 100%;
+				background-repeat:no-repeat;
+				animation: tasking2 1s ease 0s forwards;
+			}
+			@keyframes tasking2
+			{
+				0%   {background-image:url(images/task20.png);}
+				10%   {background-image:url(images/task21.png);}
+				20%   {background-image:url(images/task22.png);}
+				30%   {background-image:url(images/task23.png);}
+				100%   {background-image:url(images/task23.png);}
+			}
+
+			.task3{
+				width:300px;
+				height:300px;
+				background-size:100% 100%;
+				background-repeat:no-repeat;
+				animation: tasking3 1.5s ease 0s forwards;
+			}
+			@keyframes tasking3
+			{
+				0%   {background-image:url(images/task30.png);}
+				10%   {background-image:url(images/task31.png);}
+				20%   {background-image:url(images/task32.png);}
+				30%   {background-image:url(images/task33.png);}
+				40%   {background-image:url(images/task34.png);}
+				50%   {background-image:url(images/task35.png);}
+				60%   {background-image:url(images/task36.png);}
+				100%   {background-image:url(images/task36.png);}
+			}
+
+			.task4{
+				width:300px;
+				height:300px;
+				background-size:100% 100%;
+				background-repeat:no-repeat;
+				animation: tasking4 1.5s ease 0s forwards;
+			}
+			@keyframes tasking4
+			{
+				0%   {background-image:url(images/task40.png);}
+				10%   {background-image:url(images/task41.png);}
+				20%   {background-image:url(images/task42.png);}
+				30%   {background-image:url(images/task43.png);}
+				100%   {background-image:url(images/task43.png);}
+			}
+
+			.task5{
+				width:300px;
+				height:300px;
+				background-size:100% 100%;
+				background-repeat:no-repeat;
+				animation: tasking5 1.5s ease 0s forwards;
+			}
+			@keyframes tasking5
+			{
+				0%   {background-image:url(images/task50.png);}
+				10%   {background-image:url(images/task51.png);}
+				20%   {background-image:url(images/task52.png);}
+				100%   {background-image:url(images/task52.png);}
+			}
+
+			.task6{
+				width:300px;
+				height:300px;
+				background-size:100% 100%;
+				background-repeat:no-repeat;
+				animation: tasking6 1.5s ease 0s forwards;
+			}
+			@keyframes tasking6
+			{
+				0%   {background-image:url(images/task60.png);}
+				10%   {background-image:url(images/task61.png);}
+				20%   {background-image:url(images/task62.png);}
+				30%   {background-image:url(images/task63.png);}
+				40%   {background-image:url(images/task64.png);}
+				50%   {background-image:url(images/task65.png);}
+				100%   {background-image:url(images/task65.png);}
+			}
 
 			.showcoco{
 				animation: showingcoco 1s ease-in 0s forwards;
@@ -40,6 +157,15 @@
 				70%   {bottom:30%;transform:rotate(30deg);}
 				90%   {bottom:35%;transform:rotate(5deg);}
 				100%   {bottom:30%;transform:rotate(0deg);}
+			}
+
+			.roll{
+				animation: rolling 1s ease-out 0s forwards;
+			}
+			@keyframes rolling
+			{
+				0%   {transform:rotate(0deg);}
+				100%   {transform:rotate(-300deg);}
 			}
 
 			.notworkcoco{
@@ -71,31 +197,6 @@
 				90%   {top:140px;}
 				100%   {top:120px;}
 			}
-			
-			.shining1{
-				position:absolute;
-				bottom:60%;
-				right:40px;
-				animation: shiningstar 1s ease 0s infinite alternate;
-			}
-			.shining2{
-				position:absolute;
-				bottom:210px;
-				right:40%;
-				animation: shiningstar 1.2s ease 0.5s infinite alternate;
-			}
-			.shining3{
-				position:absolute;
-				top:100px;
-				right:50px;
-				animation: shiningstar 1.4s ease 1s infinite alternate;
-			}
-			@keyframes shiningstar
-			{
-				0%   {height:1px;}
-				50%   {height:1px;}
-				100%   {height:40px;}
-			}
 
 			.floatcloud{
 				animation: floatingcloud 30s linear 0.8s forwards;
@@ -107,6 +208,17 @@
 				100%   {opacity:1;left:-100%;}
 			}
 
+			.shine{
+				animation: shining 2s ease 0s infinite;
+			}
+			@keyframes shining
+			{
+				0%   {opacity:1;}
+				40%   {opacity:1;}
+				70%   {opacity:0;}
+				100%   {opacity:1;}
+			}
+			
 			.flybirdbig{
 				animation: flyingbirdbig 30s ease 0s infinite;
 			}
@@ -294,12 +406,6 @@
 
 			function constructscene(){
 
-				for (var i=0;i<7;i++){
-					if ($("#task"+i).length==0){
-						$("body").append("<img id='task"+i+"' class='onetask' style='position:absolute;z-index:10001;bottom:150px;width:100%;left:100%;' src='images/task"+i+".png'/>");
-					}
-				}
-
 				if ($("#bg").length==0){
 					
 					$("body").append("<img id='bg' class='scene' style='position:absolute;display:none;top:0px;left:0px;width:100%;height:100%;' src='images/bg.png'/>");
@@ -373,11 +479,12 @@
 										$("#go").fadeIn(1000);
 										$("#go").one("click",function(){
 											$(this).fadeOut(500);
-											$("#coco").fadeOut(500);
 											$("#title").fadeOut(500);
 											$("#rule").fadeOut(500);
-											post(data.pools[0].ticket,{},aftertaskcall);
-											//aftertaskcall({"result":"success","prizes":[{"amount":"1","id":"1","pooltype":"task","poolid":"0","desc":"task1","value":"1","require":"","type":"pool"}],"pools":[{"id":"1","ticket":"cf37d155ee6b40eb9db166874bf85127","require":"","type":"hongbao"}]});
+											$("#coco").animate({top:"-100%"},500,function(){
+												post(data.pools[0].ticket,{},aftertaskcall);
+												//aftertaskcall({"result":"success","prizes":[{"amount":"1","id":"1","pooltype":"task","poolid":"0","desc":"task6","value":"1","require":"","type":"pool"}],"pools":[{"id":"1","ticket":"cf37d155ee6b40eb9db166874bf85127","require":"","type":"hongbao"}]});
+											});
 										});
 									} else {
 										popshow("errordata");
@@ -425,32 +532,86 @@
 				});
 				
 			}
+			
 			function goworking(data){
-				if ($("#prizehint").length==0){
-					$("body").append("<img id='prizehint' class='onetask' style='position:absolute;z-index:10001;display:none;bottom:20px;height:180px;left:50%;transform: translateX(-50%);' src='images/prizehint.png'/>");
-					$("body").append("<img class='shine shining1 onetask' style='display:none;z-index:10001;height:0px;' src='images/shine1.png'>");
-					$("body").append("<img class='shine shining2 onetask' style='display:none;z-index:10001;height:0px;' src='images/shine2.png'>");
-					$("body").append("<img class='shine shining3 onetask' style='display:none;z-index:10001;height:0px;' src='images/shine3.png'>");
-					$("body").append("<img id='prize' class='onetask' style='position:absolute;z-index:10001;display:none;bottom:50px;height:55px;left:50%;transform: translateX(-50%);' src='images/prize.png'/>");
-				}
-				imagesloaded(function(){
-					post(data.pools[0].ticket,{},after1taskhbcall);
-					//after1taskhbcall({"result":"success","prizes":[{"amount":"1","id":"0","pooltype":"hongbao","poolid":"1","desc":"1yuanhongbao","value":"100","require":"","type":"cash"}]});
-					$("#"+data.prizes[0].desc).animate({left:"15%"},1000);
-				});
+				$("#prizetask").remove();
+				$("body").append("<div id='prizetask' task='"+data.prizes[0].desc+"' style='position:absolute;display:none;'></div>");
+				post(data.pools[0].ticket,{},after1taskhbcall);
+				//after1taskhbcall({"result":"success","prizes":[{"amount":"1","id":"0","pooltype":"hongbao","poolid":"1","desc":"1yuanhongbao","value":"100","require":"","type":"cash"}]});
 			}
+			
 			function after1taskhbcall(data){
 				share(
 						window.location.href.split("?")[0].replace("0","share")+"?"+sessionStorage.getItem("head")+"&"+sessionStorage.getItem("nick")+"&"+data.prizes[0].desc,
 						sessionStorage.getItem("nick")+"玩特种兵“壳壳上班记”获得1元现金红包",
 						window.location.href.split("?")[0].replace("0\.htm","images/shareimg.jpg")
 					);
-				$("#cover").fadeIn(1000);
-				$(".shine").fadeIn(1000);
-				$("#prizehint").fadeIn(1000);
-				$("#prize").fadeIn(1000);
-				$("#prize").one("click",function(){
-					showprize(data.prizes[0].desc);
+				$("#prizehb").remove();
+				$("body").append("<div id='prizehb' desc='"+data.prizes[0].desc+"' style='position:absolute;display:none;'></div>");
+				
+				if ($("#prizehint").length==0){
+					$("body").append("<img id='prizehint' class='onetask' style='position:absolute;z-index:10001;display:none;bottom:20px;height:180px;left:50%;transform: translateX(-50%);' src='images/prizehint.png'/>");
+					var taskanimate = 4;
+					if ($("#prizetask").attr("task")=="task0"){
+						taskanimate = 5;
+					} else if ($("#prizetask").attr("task")=="task3"){
+						taskanimate = 7;
+					} else if ($("#prizetask").attr("task")=="task5"){
+						taskanimate = 3;
+					} else if ($("#prizetask").attr("task")=="task6"){
+						taskanimate = 6;
+					}
+					
+					for (var i=0;i<taskanimate;i++){
+						$("body").append("<img style='display:none;' src='images/"+$("#prizetask").attr("task")+i+".png'>");
+					}
+					
+					$("body").append("<img id='task0desc' class='onetask' style='position:absolute;z-index:10002;display:none;left:50%;top:10px;width:65%;transform:translateX(-50%)' src='images/task0desc.png'/>");
+					$("body").append("<img id='task0roll' class='onetask' style='position:absolute;z-index:10002;left:100%;bottom:200px;' src='images/task0roll.png'/>");
+					$("body").append("<img id='taskgohint' class='onetask shine' style='position:absolute;z-index:10002;display:none;bottom:50%;right:50px;transform:translateY(-150px);' src='images/taskgohint.png'/>");
+					$("body").append("<img id='taskgo' class='onetask' style='position:absolute;z-index:10002;display:none;bottom:50%;right:20px;' src='images/"+$("#prizetask").attr("task")+"go.png'/>");
+					
+					$("body").append("<div class='onetask "+$("#prizetask").attr("task")+"' style='position:absolute;z-index:10001;left:0px;display:none;background-size:100% 100%;background-repeat:no-repeat;'></div>");
+					$("body").append("<div id='taskdoing' class='onetask' style='position:absolute;z-index:10001;left:0px;display:none;background-image:url(images/"+$("#prizetask").attr("task")+"0.png);background-size:100% 100%;background-repeat:no-repeat;'></div>");
+					
+					$("body").append("<img id='prize' class='onetask' style='position:absolute;z-index:10001;display:none;bottom:50px;height:55px;left:50%;transform: translateX(-50%);' src='images/prize.png'/>");
+				}
+				imagesloaded(function(){
+					$("#taskdoing").css("bottom","100%");
+					if ($("#prizetask").attr("task")=="task0"){
+						$("#taskdoing").css("width",$(window).width()-50);
+						$("#taskdoing").css("height",$(window).width()-50);
+					} else {
+						$("#taskdoing").css("width",$(window).width()*0.8);
+						$("#taskdoing").css("height",$(window).width()*0.8);
+						$("#taskdoing").css("left","50%");
+						$("#taskdoing").css("transform","translateX(-50%)");
+					}
+					$("#taskdoing").show();
+					$("#taskdoing").animate({bottom:"200px"},700,function(){
+						$("#taskgo").show();
+						$("#taskgohint").show();
+						if ($("#prizetask").attr("task")=="task0"){
+							$("#task0desc").fadeIn(1000);
+						}
+						$("#taskgo").one("click",function(){
+							$("#taskgohint").remove();
+							$("#taskdoing").addClass($("#prizetask").attr("task"));
+							if ($("#prizetask").attr("task")=="task0"){
+								$("#task0roll").addClass("roll");
+								$("#task0roll").animate({left:"36%"},1000);
+							}
+							setTimeout(function(){
+								$("#prizehint").fadeIn(1000);
+								$("#prize").fadeIn(1000);
+								$("#prize").one("click",function(){
+									showprize($("#prizehb").attr("desc"));
+								});
+							},1000);
+						});
+					});
+					
+					
 				});
 				
 			}
