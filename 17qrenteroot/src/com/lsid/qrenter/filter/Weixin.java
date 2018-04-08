@@ -1,6 +1,7 @@
 package com.lsid.qrenter.filter;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Random;
 
@@ -68,7 +69,7 @@ public class Weixin implements Filter {
 	    		String ticket=request.getRequestURI().substring(12);
 	    		String param2=request.getQueryString();
 	    		String thirduri=AutoConfig.readticket(ticket);
-	    		response.sendRedirect(thirduri+"?"+param2);
+	    		response.sendRedirect(URLDecoder.decode(thirduri,"UTF-8")+"?"+param2);
 	    		return;
 	    	}
 	    	
@@ -164,13 +165,16 @@ public class Weixin implements Filter {
 	    				}
 	    			}
 	    			String ticket = AutoConfig.generateticket(hosturl,"fixedexpire");
+	    			
 	    			for(int i=0;i<param.length;i++){
 	    				if(param[i].indexOf("redirect_uri")!=-1){
 	    					param[i]="redirect_uri="+AutoConfig.config(null, "lsid.host.userentry")+"toauthback/"+ticket;
 	    				}
 	    				params+=param[i]+"&";
-	    			}	    			
+	    			}	
+	    			
 	    			params=params.substring(0,params.length()-1);
+	    			
 	    			response.sendRedirect("https://open.weixin.qq.com/connect/oauth2/authorize?"+params);
 					return;
 	    		}
