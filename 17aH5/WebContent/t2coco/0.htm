@@ -8,6 +8,7 @@
   		<meta name="Keywords" content="特种兵壳壳上班记" />
   		<link rel="stylesheet" href="../mycss/core.css">
   		<style type="text/css">
+  			
 	  		@keyframes loadingmascot
 			{
 				0%   {background-image:url(images/loading2.png);}
@@ -21,8 +22,8 @@
 	
 		  	@keyframes lighting
 			{
-				0%   {box-shadow:0 0 15px 5px rgba(255,215,0,.8)}
-				100%   {box-shadow:0 0 5px 15px rgba(255,215,0,.8)}
+				0%   {box-shadow:0 0 20px 5px rgba(255,215,0,.8)}
+				100%   {box-shadow:0 0 5px 20px rgba(255,215,0,.8)}
 			}
 		  		
 			.livecoco{
@@ -253,10 +254,9 @@
 			}
 			@keyframes shining
 			{
-				0%   {opacity:1;}
-				40%   {opacity:1;}
-				70%   {opacity:0;}
-				100%   {opacity:1;}
+				0%   {right:60px;height:50px;opacity:1;}
+				60%   {right:80px;height:60px;opacity:0;}
+				100%   {right:60px;height:50px;opacity:1;}
 			}
 			
 			.flybirdbig{
@@ -529,8 +529,8 @@
 											$("#title").fadeOut(500);
 											$("#rule").fadeOut(500);
 											$("#coco").animate({top:"-100%"},500,function(){
-												post(data.pools[0].ticket,{},aftertaskcall);
-												//aftertaskcall({"result":"success","prizes":[{"amount":"1","id":"1","pooltype":"task","poolid":"0","desc":"task4","value":"1","require":"","type":"pool"}],"pools":[{"id":"1","ticket":"cf37d155ee6b40eb9db166874bf85127","require":"","type":"hongbao"}]});
+												//post(data.pools[0].ticket,{},aftertaskcall);
+												aftertaskcall({"result":"success","prizes":[{"amount":"1","id":"1","pooltype":"task","poolid":"0","desc":"task4","value":"1","require":"","type":"pool"}],"pools":[{"id":"1","ticket":"cf37d155ee6b40eb9db166874bf85127","require":"","type":"hongbao"}]});
 											});
 										});
 									} else {
@@ -586,8 +586,8 @@
 			function goworking(data){
 				$("#prizetask").remove();
 				$("body").append("<div id='prizetask' task='"+data.prizes[0].desc+"' style='position:absolute;display:none;'></div>");
-				post(data.pools[0].ticket,{},after1taskhbcall);
-				//after1taskhbcall({"result":"success","prizes":[{"amount":"1","id":"0","pooltype":"hongbao","poolid":"1","desc":"1yuanhongbao","value":"100","require":"","type":"cash"}]});
+				//post(data.pools[0].ticket,{},after1taskhbcall);
+				after1taskhbcall({"result":"success","prizes":[{"amount":"1","id":"0","pooltype":"hongbao","poolid":"1","desc":"1yuanhongbao","value":"100","require":"","type":"cash"}]});
 			}
 			
 			function after1taskhbcall(data){
