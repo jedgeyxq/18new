@@ -69,7 +69,12 @@ public class Weixin implements Filter {
 	    		String ticket=request.getRequestURI().substring(12);
 	    		String param2=request.getQueryString();
 	    		String thirduri=AutoConfig.readticket(ticket);
-	    		response.sendRedirect(URLDecoder.decode(thirduri,"UTF-8")+"?"+param2);
+	    		thirduri = URLDecoder.decode(thirduri,"UTF-8");
+	    		String split = "?";
+	    		if (thirduri.contains("?")){
+	    			split="&";
+	    		}
+	    		response.sendRedirect(thirduri+split+param2);
 	    		return;
 	    	}
 	    	
