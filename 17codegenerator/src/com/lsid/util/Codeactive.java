@@ -29,24 +29,24 @@ public class Codeactive {
 		String line = s[3];
 		String batch = s[4];
 		String prod = s[5];
-		
-		Path logfile = Paths.get(eid+"."+prod+"."+System.currentTimeMillis());
+		Files.createDirectories(Paths.get("logs"));
+		Path logfile = Paths.get("logs/log."+eid+"."+prod+"."+System.currentTimeMillis());
 		List<String> code=new ArrayList<String>(5000);
 		for (int c = 6; c<s.length;c++){
 			Files.write(logfile,("activating "+s[c]+System.lineSeparator()).getBytes("UTF-8"),StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 			
-			List<String> all = Files.readAllLines(Paths.get(s[c]), Charset.forName("UTF-8"));
+			List<String> all = Files.readAllLines(Paths.get("ready/"+eid+"/"+s[c]), Charset.forName("UTF-8"));
 			for (int i=0;i<all.size();i++){
 				code.add(all.get(i));
 				if (code.size()==5000){
-					lscode(eid, apikey, encryptsecret, line, batch, prod, code);
+					lscode(logfile, eid, apikey, encryptsecret, line, batch, prod, code);
 					code.clear();
 					Thread.sleep(3000);
 					Files.write(logfile,(i+" done"+System.lineSeparator()).getBytes("UTF-8"),StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 				}
 			}
 			if (!code.isEmpty()){
-				lscode(eid, apikey, encryptsecret, line, batch, prod, code);
+				lscode(logfile, eid, apikey, encryptsecret, line, batch, prod, code);
 				code.clear();
 				Thread.sleep(3000);
 				Files.write(logfile,(all.size()+" done"+System.lineSeparator()).getBytes("UTF-8"),StandardOpenOption.CREATE, StandardOpenOption.APPEND);
@@ -58,7 +58,7 @@ public class Codeactive {
 		
 	}
 
-	public static void lscode(String eid, String apikey, String encryptsecret, String line, String batch, String prod, List<String> code) throws Exception {
+	public static void lscode(Path logfile, String eid, String apikey, String encryptsecret, String line, String batch, String prod, List<String> code) throws Exception {
 		Form f = Form.form();
 		byte[] raw = encryptsecret.getBytes("utf-8");
 		SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
@@ -73,7 +73,7 @@ public class Codeactive {
 		String sign = sign(params + "&key=" + apikey);
 		String res = Request.Post("http://ha0q.cn/17newlscode?" + params + "&sign=" + sign).bodyForm(f.build())
 				.execute().returnContent().asString();
-		Files.write(Paths.get(eid+"-"+prod), (res+System.lineSeparator()).getBytes("UTF-8"), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+		Files.write(logfile, (res+System.lineSeparator()).getBytes("UTF-8"), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 	}
 	
 	private static String sign(String raw) {

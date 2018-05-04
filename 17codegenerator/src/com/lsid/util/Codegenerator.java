@@ -20,7 +20,8 @@ public class Codegenerator {
 			throw new Exception("32limit");
 		}
 		
-		final Path logfile = Paths.get("log."+eid+"."+System.currentTimeMillis());
+		Files.createDirectories(Paths.get("logs"));
+		final Path logfile = Paths.get("logs/log."+eid+".gen."+System.currentTimeMillis());
 		
 		Files.createDirectories(Paths.get("repo"));
 		
