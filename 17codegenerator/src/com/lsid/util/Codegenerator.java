@@ -1,17 +1,13 @@
 package com.lsid.util;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -24,16 +20,16 @@ public class Codegenerator {
 			throw new Exception("32limit");
 		}
 		
-		Files.createDirectories(Paths.get("d:/codegenerator/repo"));
+		Files.createDirectories(Paths.get("repo"));
 		
-		final Path codeg = Paths.get("d:/codegenerator/repo/generating"+eid);
+		final Path codeg = Paths.get("repo/generating"+eid);
 		
-		final Path codep = Paths.get("d:/codegenerator/repo/"+eid);
+		final Path codep = Paths.get("repo/"+eid);
 		Files.createDirectories(codep);
 		
 		Files.write(codeg, new byte[0], StandardOpenOption.CREATE_NEW);
 		
-		final Path coder = Paths.get("d:/codegenerator/ready/"+eid);
+		final Path coder = Paths.get("ready/"+eid);
 		Files.createDirectories(coder);
 		
 		final Vector<String> a = new Vector<String>(5000000);
@@ -50,7 +46,7 @@ public class Codegenerator {
 						}
 					} else {
 						String code = a.remove(0);
-						String coderepofile = String.valueOf(Math.abs(code.hashCode()%100000));
+						String coderepofile = String.valueOf(Math.abs(code.hashCode()%10000));
 						try {
 							if (!haveignorecase(codep.resolve(coderepofile),code)){
 								Files.write(codep.resolve(coderepofile), (code+System.lineSeparator()).getBytes("UTF-8"), 
@@ -114,23 +110,11 @@ public class Codegenerator {
 		return false;
 	}
 	
-	private static void valid(Path... files) throws Exception{
-		java.util.Map<String, String> b = new java.util.HashMap<String, String>();
-		for (Path file:files){
-			List<String> a = Files.readAllLines(file, Charset.forName("UTF-8"));
-			System.out.println(new Date() + " validating ["+a.size()+"] lines of code");
-			for (String aline:a){
-				if (b.get(aline)!=null){
-					System.out.println("repeated=["+aline+"]");
-				}
-				b.put(aline, aline);
-			}
-			System.out.println(new Date()+" no repeat in file ["+file.toString()+"]");
-		}
-	}
-	
 	public static void main(String[] s) throws Exception{
-		generate("ha0x.cn", 10, "t2", 5000000);
-		//valid(Paths.get("D:\\codegenerator\\ready\\t2\\t2-10-5000000-20180312210038"));
+		String domain = s[0];
+		Integer length = Integer.parseInt(s[1]);
+		String eid = s[2];
+		Integer amount = Integer.parseInt(s[3]);
+		generate(domain, length, eid, amount);
 	}
 }
