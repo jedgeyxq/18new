@@ -20,6 +20,8 @@ public class Codegenerator {
 			throw new Exception("32limit");
 		}
 		
+		final Path logfile = Paths.get("log."+eid+"."+System.currentTimeMillis());
+		
 		Files.createDirectories(Paths.get("repo"));
 		
 		final Path codeg = Paths.get("repo/generating"+eid);
@@ -57,6 +59,12 @@ public class Codegenerator {
 						}
 					}
 				}
+				try {
+					Files.write(logfile, (new Date()+" writing repo end"+System.lineSeparator()).getBytes("UTF-8"), 
+							StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				System.out.println(new Date()+" writing repo end");
 			}
 			
@@ -65,6 +73,12 @@ public class Codegenerator {
 		String filename = eid+"-"+length+"-"+numofcode+"-"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 
 		long count = 0;
+		try {
+			Files.write(logfile, (new Date()+" " + filename+" starting ("+count+")"+System.lineSeparator()).getBytes("UTF-8"), 
+					StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		System.out.println(new Date()+" " + filename+" starting ("+count+")");
 		while (count<numofcode){
 			String code = UUID.randomUUID().toString().replaceAll("-", "").substring(0,length);
@@ -82,13 +96,24 @@ public class Codegenerator {
 						StandardOpenOption.CREATE,StandardOpenOption.APPEND);
 				count++;
 				if (count%10000==0){
-					System.out.println(count);
+					try {
+						Files.write(logfile, (count+" done"+System.lineSeparator()).getBytes("UTF-8"), 
+								StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 				a.add(code);
 			}
 		}
 		Files.deleteIfExists(codeg);
-		System.out.println(new Date()+" " + filename+" ready ("+count+")");
+		try {
+			Files.write(logfile, (new Date()+" " + filename+" ready ("+count+"), waiting for repo done"+System.lineSeparator()).getBytes("UTF-8"), 
+					StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(new Date()+" " + filename+" ready ("+count+"), waiting for repo done");
 	}
 	
 	private static boolean haveignorecase(Path file, String target) throws Exception{
