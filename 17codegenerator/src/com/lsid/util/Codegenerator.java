@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -51,7 +52,7 @@ public class Codegenerator {
 						String code = a.remove(0);
 						String coderepofile = String.valueOf(Math.abs(code.hashCode()%10000));
 						try {
-							if (!haveignorecase(codep.resolve(coderepofile),code)){
+							if (!contains(codep.resolve(coderepofile),code)){
 								Files.write(codep.resolve(coderepofile), (code+System.lineSeparator()).getBytes("UTF-8"), 
 										StandardOpenOption.CREATE, StandardOpenOption.APPEND, StandardOpenOption.SYNC);
 							}
@@ -83,10 +84,16 @@ public class Codegenerator {
 		System.out.println(new Date()+" " + filename+" starting ("+count+")");
 		while (count<numofcode){
 			String code = UUID.randomUUID().toString().replaceAll("-", "").substring(0,length);
-			
+			char[] cc=code.toCharArray();
+			int uppercases = new Random().nextInt(length/2);
+			for (int i=0;i<uppercases;i++){
+				int uppercase = new Random().nextInt(length);
+				cc[uppercase] = String.valueOf(cc[uppercase]).toUpperCase().charAt(0);
+			}
+			code = String.copyValueOf(cc);
 			String coderepofile = String.valueOf(Math.abs(code.hashCode()%100000));
 			
-			boolean isduplicate = a.contains(code)||haveignorecase(codep.resolve(coderepofile),code);
+			boolean isduplicate = a.contains(code)||contains(codep.resolve(coderepofile),code);
 			
 			if (!isduplicate){
 				if (count!=0){
@@ -117,13 +124,13 @@ public class Codegenerator {
 		System.out.println(new Date()+" " + filename+" ready ("+count+"), waiting for repo done");
 	}
 	
-	private static boolean haveignorecase(Path file, String target) throws Exception{
+	private static boolean contains(Path file, String target) throws Exception{
 		if (Files.exists(file)){
 			BufferedReader br = Files.newBufferedReader(file, Charset.forName("UTF-8"));
 			try{
 				String line = br.readLine();
 				while(line!=null){
-					if (line.toLowerCase().contains(target.toLowerCase())){
+					if (line.equals(target)){
 						return true;
 					}
 					line = br.readLine();
