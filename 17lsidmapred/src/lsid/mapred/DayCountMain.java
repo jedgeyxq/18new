@@ -33,37 +33,29 @@ public class DayCountMain{
 			col = s[2];
 		}
 
-		String start = null;
+		String outputformat = null;
 		if (s.length>3){
-			start = String.valueOf(Integer.parseInt(s[3]));
+			outputformat = s[3];
 		} else {
-			start = "1";
-		}
-
-		String end = null;
-		if (s.length>4){
-			end = String.valueOf(Integer.parseInt(s[4]));
-		} else {
-			end="3";
+			outputformat = "1#2";
 		}
 
 		String day = null;
-		if (s.length>5){
-			day = String.valueOf(Integer.parseInt(s[5]));
+		if (s.length>4){
+			day = s[4];
 		} else {
-			day="3";
+			day = "4";
 		}
 
-		if (eid==null||table==null||col==null||start==null||end==null||day==null){
-			throw new IOException("please append eid table column start end day to the command");
+		if (eid==null||table==null||col==null){
+			throw new IOException("please append eid table column [outputformat day] to the command");
 		}
 		
 		Configuration config = HBaseConfiguration.create();
 		config.set("eid", eid);
 		config.set("table", table);
 		config.set("col", col);
-		config.set("start", start);
-		config.set("end", end);
+		config.set("outputformat", outputformat);
 		config.set("day", day);
 		config.set("startime", new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
 		

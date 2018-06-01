@@ -21,13 +21,14 @@ public class DayCountMapper extends TableMapper<Text, IntWritable>  {
 	   			byte[] c = value.getValue(Bytes.toBytes("cf"), Bytes.toBytes(context.getConfiguration().get("col")));
 				if (c != null && Bytes.toString(c) != null) {				
 					String[] parts = DefaultCipher.dec(Bytes.toString(c)).split("#");
+					String[] outputformat = context.getConfiguration().get("outputformat").split("#");
+					
 					String suffix = "";
-					for (int i=Integer.parseInt(context.getConfiguration().get("start"));
-							i<parts.length-Integer.parseInt(context.getConfiguration().get("end"));i++){
-						suffix +="_"+parts[i].replaceAll("_", "-");
+					for (String position:outputformat){
+						suffix += "_"+parts[Integer.parseInt(position)].replaceAll("_", "-");
 					}
 					Text t = new Text();
-		   			t.set(parts[parts.length-Integer.parseInt(context.getConfiguration().get("day"))].split(" ")[0]+suffix);
+		   			t.set(parts[Integer.parseInt(context.getConfiguration().get("day"))].split(" ")[0]+suffix);
 			   		context.write(t, ONE);
 				}
    			}
