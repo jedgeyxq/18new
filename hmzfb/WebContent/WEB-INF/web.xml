@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>hmzfb</display-name>
+  <filter>
+    <filter-name>zfbauthfilter</filter-name>
+    <filter-class>
+	 	com.jedge.hm.zfb.filter.Auth
+	</filter-class>
+  </filter>
+    <filter-mapping>
+    <filter-name>zfbauthfilter</filter-name>
+    <url-pattern>/auth/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <filter-name>zfbauthbackfilter</filter-name>
+    <filter-class>
+	 	com.jedge.hm.zfb.filter.Authback
+	</filter-class>
+  </filter>
+    <filter-mapping>
+    <filter-name>zfbauthfilter</filter-name>
+    <url-pattern>/authback/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>zfbpayfilter</filter-name>
+    <filter-class>
+	 	com.jedge.hm.zfb.filter.Pay
+	</filter-class>
+  </filter>
+    <filter-mapping>
+    <filter-name>zfbpayfilter</filter-name>
+    <url-pattern>/pay/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>zfbpayqueryfilter</filter-name>
+    <filter-class>
+	 	com.jedge.hm.zfb.filter.Payquery
+	</filter-class>
+  </filter>
+    <filter-mapping>
+    <filter-name>zfbpayqueryfilter</filter-name>
+    <url-pattern>/payquery/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>zfbpaynotifyfilter</filter-name>
+    <filter-class>
+	 	com.jedge.hm.zfb.filter.Paynotify
+	</filter-class>
+  </filter>
+    <filter-mapping>
+    <filter-name>zfbpaynotifyfilter</filter-name>
+    <url-pattern>/paynotify/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>zfbpayreturnfilter</filter-name>
+    <filter-class>
+	 	com.jedge.hm.zfb.filter.Payreturn
+	</filter-class>
+  </filter>
+    <filter-mapping>
+    <filter-name>zfbpayreturnfilter</filter-name>
+    <url-pattern>/payreturn/*</url-pattern>
+  </filter-mapping>
+  
+</web-app>
