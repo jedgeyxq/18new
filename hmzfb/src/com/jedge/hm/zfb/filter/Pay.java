@@ -62,7 +62,7 @@ public class Pay implements Filter {
 				// SDK 公共请求类，包含公共请求参数，以及封装了签名与验签，开发者无需关注签名与验签
 				// 调用RSA签名方式
 				AlipayClient client = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", Config.HUAMEI_ZFBAPPID,
-						Config.HUAMEI_ZFBPRIKEY, "json", "UTF-8", Config.HUAMEI_ZFBPUBKEY, "RSA2");
+						Config.HUAMEI_ZFBPRIKEY, "json", "UTF-8", Config.HUAMEI_ZFBPUBKEY, "RSA");
 				AlipayTradeWapPayRequest alipay_request = new AlipayTradeWapPayRequest();
 
 				// 封装请求支付信息

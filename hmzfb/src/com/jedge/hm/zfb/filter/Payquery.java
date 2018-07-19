@@ -53,7 +53,7 @@ public class Payquery implements Filter {
 			if (sign.equals(request.getParameter("sign"))) {
 				AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do",
 						Config.HUAMEI_ZFBAPPID, Config.HUAMEI_ZFBPRIKEY, "json", "GBK", Config.HUAMEI_ZFBPUBKEY,
-						"RSA2");
+						"RSA");
 				AlipayTradeQueryRequest alirequest = new AlipayTradeQueryRequest();
 				alirequest.setBizContent("{" + "\"out_trade_no\":\"" + orderid + "\"," + "\"trade_no\":\"" +ali_order_no+ "\"  }");
 				AlipayTradeQueryResponse aliresponse = alipayClient.execute(alirequest);

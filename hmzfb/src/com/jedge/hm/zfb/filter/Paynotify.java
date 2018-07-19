@@ -69,7 +69,7 @@ public class Paynotify implements Filter {
 			// 计算得出通知验证结果
 			// boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String
 			// publicKey, String charset, String sign_type)
-			boolean verify_result = AlipaySignature.rsaCheckV1(params, Config.HUAMEI_ZFBPUBKEY, "UTF-8", "RSA2");
+			boolean verify_result = AlipaySignature.rsaCheckV1(params, Config.HUAMEI_ZFBPUBKEY, "UTF-8", "RSA");
 
 			if (verify_result) {// 验证成功
 				//////////////////////////////////////////////////////////////////////////////////////////

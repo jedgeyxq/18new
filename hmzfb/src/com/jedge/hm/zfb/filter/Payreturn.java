@@ -64,7 +64,7 @@ public class Payreturn implements Filter {
 			//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以上仅供参考)//
 			//计算得出通知验证结果
 			//boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
-			boolean verify_result = AlipaySignature.rsaCheckV1(params, Config.HUAMEI_ZFBPUBKEY, "UTF-8", "RSA2");
+			boolean verify_result = AlipaySignature.rsaCheckV1(params, Config.HUAMEI_ZFBPUBKEY, "UTF-8", "RSA");
 			
 			if(verify_result){//验证成功
 				//////////////////////////////////////////////////////////////////////////////////////////

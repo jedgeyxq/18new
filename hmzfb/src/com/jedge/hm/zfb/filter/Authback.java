@@ -82,6 +82,8 @@ public class Authback implements Filter {
 					throw new Exception("Wrong zfbinfo format=" + URLEncoder.encode(zfbinfo, "UTF-8"));
 				}
 
+			} else {
+				throw new Exception("Wrong ticket=[" + ticket+"], codeString=["+codeString+"], projectId=["+projectId+"], auth_code=["+zfbcode+"]");
 			}
 		} catch (Exception e) {
 			StringWriter errors = new StringWriter();
