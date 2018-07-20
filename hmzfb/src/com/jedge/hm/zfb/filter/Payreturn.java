@@ -3,6 +3,7 @@ package com.jedge.hm.zfb.filter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -80,7 +81,9 @@ public class Payreturn implements Filter {
 				//out.clear();
 				//out.println("验证失败");
 			}
-			response.sendRedirect(Config.HUAXIN_PAYRETURN+"?orderid="+out_trade_no);
+			String url = Config.HUAXIN_PAYRETURN+"?orderid="+out_trade_no;
+			System.out.println(new Date()+" ==== after zfb pay result ["+verify_result+"] and got to ["+url+"]");
+			response.sendRedirect(url);
 		} catch (Exception e) {
 			StringWriter errors = new StringWriter();
 			e.printStackTrace(new PrintWriter(errors));

@@ -55,7 +55,7 @@ public class Payquery implements Filter {
 						Config.HUAMEI_ZFBAPPID, Config.HUAMEI_ZFBPRIKEY, "json", "GBK", Config.HUAMEI_ZFBPUBKEY,
 						"RSA");
 				AlipayTradeQueryRequest alirequest = new AlipayTradeQueryRequest();
-				alirequest.setBizContent("{" + "\"out_trade_no\":\"" + orderid + "\"," + "\"trade_no\":\"" +ali_order_no+ "\"  }");
+				alirequest.setBizContent("{" + "\"out_trade_no\":\"" + (orderid==null?"":orderid) + "\"," + "\"trade_no\":\"" +(ali_order_no==null?"":ali_order_no)+ "\"  }");
 				AlipayTradeQueryResponse aliresponse = alipayClient.execute(alirequest);
 				if (aliresponse.isSuccess()) {
 					returnvalue.put("result", "success");
@@ -71,9 +71,10 @@ public class Payquery implements Filter {
 					if ("TRADE_CLOSED".equals(aliresponse.getTradeStatus())) {
 						returnvalue.put("orderStatus", "3");
 					}
+					response.getWriter().write(new ObjectMapper().writeValueAsString(returnvalue));
 				} else {
 					returnvalue.put("code", "0");
-					throw new Exception("Alipay error: [" + aliresponse.getCode() + "]");
+					throw new Exception("Alipay error: [" + aliresponse.getBody() + "]");
 				}
 			} else {
 				returnvalue.put("code", "1");

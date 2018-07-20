@@ -102,11 +102,12 @@ public class Paynotify implements Filter {
 				data.put("orderStatus", "2");
 				
 				String sign = Config.createSign(data, Config.HUAXIN_PARTNERKEY);
-				Request.Get(Config.HUAXIN_PAYNOTIFY + "?orderid=" + data.get("orderid") + "&ali_order_no="
+				String url = Config.HUAXIN_PAYNOTIFY + "?orderid=" + data.get("orderid") + "&ali_order_no="
 						+ data.get("ali_order_no") + "&nonce_str=" + data.get("nonce_str") + "&orderStatus="
-						+ data.get("orderStatus") + "&sign=" + sign)
+						+ data.get("orderStatus") + "&sign=" + sign;
+				System.out.println(new Date()+" ==== successful zfb ["+trade_status+"] and notify result = ["+Request.Get(url)
 						.connectTimeout(20000).socketTimeout(20000).execute().returnContent()
-						.asString(Charset.forName("UTF-8"));
+						.asString(Charset.forName("UTF-8"))+"] of request =["+url+"]");
 
 				// ——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
 				response.getWriter().write("success"); // 请不要修改或删除
@@ -119,11 +120,12 @@ public class Paynotify implements Filter {
 				data.put("nonce_str", new Random().nextInt(100000));
 				data.put("orderStatus", "3");
 				String sign = Config.createSign(data, Config.HUAXIN_PARTNERKEY);
-				Request.Get(Config.HUAXIN_PAYNOTIFY + "?orderid=" + data.get("orderid") + "&ali_order_no="
+				String url = Config.HUAXIN_PAYNOTIFY + "?orderid=" + data.get("orderid") + "&ali_order_no="
 						+ data.get("ali_order_no") + "&nonce_str=" + data.get("nonce_str") + "&orderStatus="
-						+ data.get("orderStatus") + "&sign=" + sign)
+						+ data.get("orderStatus") + "&sign=" + sign;
+				System.out.println(new Date()+" ==== fail zfb ["+trade_status+"] and notify result = ["+Request.Get(url)
 						.connectTimeout(20000).socketTimeout(20000).execute().returnContent()
-						.asString(Charset.forName("UTF-8"));
+						.asString(Charset.forName("UTF-8"))+"] of request =["+url+"]");
 				response.getWriter().write("fail");
 			}
 		} catch (Exception e) {

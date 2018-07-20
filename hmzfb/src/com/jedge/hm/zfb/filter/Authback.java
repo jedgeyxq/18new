@@ -74,10 +74,12 @@ public class Authback implements Filter {
 					String province = jn.get("alipay_user_userinfo_share_response").get("province").asText();
 					String city = jn.get("alipay_user_userinfo_share_response").get("city").asText();
 					String country = "China";
-					response.sendRedirect(Config.HUAXIN_AUTHFINISH + "?openid=" + openid + "&nickname=" + nickname + "&sex="
+					String url = Config.HUAXIN_AUTHFINISH + "?openid=" + openid + "&nickname=" + nickname + "&sex="
 							+ sex + "&headimgurl=" + headimgurl + "&unionid=" + unionid + "&scanWay=" + scanWay
 							+ "&province=" + province + "&city=" + city + "&country=" + country + "&codeString="
-							+ codeString + "&projectId=" + projectId);
+							+ codeString + "&projectId=" + projectId;
+					System.out.println(new Date()+" ==== after auth ["+url+"]");
+					response.sendRedirect(url);
 				} else {
 					throw new Exception("Wrong zfbinfo format=" + URLEncoder.encode(zfbinfo, "UTF-8"));
 				}
