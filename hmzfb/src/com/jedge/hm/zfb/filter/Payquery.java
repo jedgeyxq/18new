@@ -1,5 +1,6 @@
 package com.jedge.hm.zfb.filter;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -20,6 +21,7 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradeQueryResponse;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jedge.hm.zfb.util.Config;
 
@@ -41,52 +43,71 @@ public class Payquery implements Filter {
 		response.setCharacterEncoding("UTF-8");
 		Map<String, String> returnvalue = new HashMap<String, String>();
 		try {
-			String orderid = request.getParameter("orderid");
-			String ali_order_no = request.getParameter("ali_order_no");
+			StringBuffer jb = new StringBuffer();
+			String line = null;
+			BufferedReader reader = null;
+			try {
+				reader = request.getReader();
+				while ((line = reader.readLine()) != null) {
+					jb.append(line);
+				}
+			} finally {
+				reader.close();
+			}
+			JsonNode jn = new ObjectMapper().readTree(jb.toString());
+			String orderid = jn.has("orderid")?jn.get("orderid").asText():null;
+			String ali_order_no = jn.has("ali_order_no")?jn.get("ali_order_no").asText():null;
+			String nonce_str = jn.has("nonce_str")?jn.get("nonce_str").asText():null;
+			String sign = jn.has("sign")?jn.get("sign").asText():null;
 			Map<String, Object> data = new HashMap<String, Object>();
 			data.put("orderid", orderid);
 			data.put("ali_order_no", ali_order_no);
-			data.put("nonce_str", request.getParameter("nonce_str"));
+			data.put("nonce_str", nonce_str);
 
-			String sign = Config.createSign(data, Config.HUAXIN_PARTNERKEY);
+			String expectedsign = Config.createSign(data, Config.HUAXIN_PARTNERKEY);
 
-			if (sign.equals(request.getParameter("sign"))) {
+			if (expectedsign.equals(sign)) {
 				AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do",
-						Config.HUAMEI_ZFBAPPID, Config.HUAMEI_ZFBPRIKEY, "json", "GBK", Config.HUAMEI_ZFBPUBKEY,
-						"RSA");
+						Config.HUAMEI_ZFBAPPID, Config.HUAMEI_ZFBPRIKEY, "json", "GBK", Config.HUAMEI_ZFBPUBKEY, "RSA");
 				AlipayTradeQueryRequest alirequest = new AlipayTradeQueryRequest();
-				alirequest.setBizContent("{" + "\"out_trade_no\":\"" + (orderid==null?"":orderid) + "\"," + "\"trade_no\":\"" +(ali_order_no==null?"":ali_order_no)+ "\"  }");
+				alirequest.setBizContent("{" + "\"out_trade_no\":\"" + (orderid == null ? "" : orderid) + "\","
+						+ "\"trade_no\":\"" + (ali_order_no == null ? "" : ali_order_no) + "\"  }");
 				AlipayTradeQueryResponse aliresponse = alipayClient.execute(alirequest);
 				if (aliresponse.isSuccess()) {
 					returnvalue.put("result", "success");
 					returnvalue.put("orderid", aliresponse.getOutTradeNo());
 					returnvalue.put("ali_order_no", aliresponse.getTradeNo());
-					returnvalue.put("time_end", new SimpleDateFormat("yyyyMMddHHmmss").format(aliresponse.getSendPayDate()));
+					returnvalue.put("time_end",
+							new SimpleDateFormat("yyyyMMddHHmmss").format(aliresponse.getSendPayDate()));
 					if ("WAIT_BUYER_PAY".equals(aliresponse.getTradeStatus())) {
 						returnvalue.put("orderStatus", "1");
 					}
-					if ("TRADE_SUCCESS".equals(aliresponse.getTradeStatus())||"TRADE_FINISHED".equals(aliresponse.getTradeStatus())) {
+					if ("TRADE_SUCCESS".equals(aliresponse.getTradeStatus())
+							|| "TRADE_FINISHED".equals(aliresponse.getTradeStatus())) {
 						returnvalue.put("orderStatus", "2");
 					}
 					if ("TRADE_CLOSED".equals(aliresponse.getTradeStatus())) {
 						returnvalue.put("orderStatus", "3");
 					}
-					response.getWriter().write(new ObjectMapper().writeValueAsString(returnvalue));
 				} else {
-					returnvalue.put("code", "0");
-					throw new Exception("Alipay error: [" + aliresponse.getBody() + "]");
+					returnvalue.put("result", "success");
+					returnvalue.put("orderid", orderid==null?"":orderid);
+					returnvalue.put("ali_order_no", ali_order_no==null?"":ali_order_no);
+					returnvalue.put("time_end","");
+					returnvalue.put("orderStatus", "0");
 				}
+				response.getWriter().write(new ObjectMapper().writeValueAsString(returnvalue));
 			} else {
 				returnvalue.put("code", "1");
-				throw new Exception("Wrong orderid=[" + request.getParameter("orderid") + "],ali_order_no=["
-						+ request.getParameter("ali_order_no") + "],nonce_str=[" + request.getParameter("nonce_str")
-						+ "],your sign=[" + request.getParameter("sign") + "],expected sign=[" + sign + "]");
+				throw new Exception("Wrong postdata =["+jb.toString()+"] orderid=[" + orderid + "],ali_order_no=["
+						+ ali_order_no + "],nonce_str=[" + nonce_str
+						+ "],your sign=[" + sign + "],expected sign=[" + expectedsign + "]");
 			}
 		} catch (Exception e) {
 			StringWriter errors = new StringWriter();
 			e.printStackTrace(new PrintWriter(errors));
 			returnvalue.put("result", "fail");
-			if (returnvalue.get("code")==null) {
+			if (returnvalue.get("code") == null) {
 				returnvalue.put("code", "2");
 			}
 			returnvalue.put("reason", errors.toString());
