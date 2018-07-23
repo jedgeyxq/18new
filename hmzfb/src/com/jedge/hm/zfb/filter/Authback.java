@@ -90,7 +90,7 @@ public class Authback implements Filter {
 		} catch (Exception e) {
 			StringWriter errors = new StringWriter();
 			e.printStackTrace(new PrintWriter(errors));
-			System.out.println(new Date()+" ==== error when handing ["+request.getRequestURI()+"]"+errors.toString());
+			response.getWriter().write(errors.toString());
 		}
 
 	}
