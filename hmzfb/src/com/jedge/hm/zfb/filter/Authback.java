@@ -92,7 +92,6 @@ public class Authback implements Filter {
 			e.printStackTrace(new PrintWriter(errors));
 			response.getWriter().write(errors.toString());
 		}
-
 	}
 
 	@Override
