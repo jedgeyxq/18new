@@ -71,8 +71,14 @@ public class Authback implements Filter {
 					String headimgurl = jn.get("alipay_user_userinfo_share_response").get("avatar").asText();
 					String unionid = "";
 					String scanWay = "1";
-					String province = jn.get("alipay_user_userinfo_share_response").get("province").asText();
-					String city = jn.get("alipay_user_userinfo_share_response").get("city").asText();
+					String province = "";
+					if (jn.get("alipay_user_userinfo_share_response").get("province")!=null) {
+						province = jn.get("alipay_user_userinfo_share_response").get("province").asText();
+					}
+					String city = "";
+					if (jn.get("alipay_user_userinfo_share_response").get("city")!=null) {
+						city = jn.get("alipay_user_userinfo_share_response").get("city").asText();
+					}
 					String country = "China";
 					String url = Config.HUAXIN_AUTHFINISH + "?openid=" + openid + "&nickname=" + nickname + "&sex="
 							+ sex + "&headimgurl=" + headimgurl + "&unionid=" + unionid + "&scanWay=" + scanWay
