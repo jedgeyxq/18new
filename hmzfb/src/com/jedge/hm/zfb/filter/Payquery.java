@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -89,11 +90,14 @@ public class Payquery implements Filter {
 					if ("TRADE_CLOSED".equals(aliresponse.getTradeStatus())) {
 						returnvalue.put("orderStatus", "3");
 					}
+					DecimalFormat df = new DecimalFormat("#");
+					returnvalue.put("amount",df.format(Double.parseDouble(aliresponse.getTotalAmount())*100));
 				} else {
 					returnvalue.put("result", "success");
 					returnvalue.put("orderid", orderid==null?"":orderid);
 					returnvalue.put("ali_order_no", ali_order_no==null?"":ali_order_no);
 					returnvalue.put("time_end","");
+					returnvalue.put("amount","0");
 					returnvalue.put("orderStatus", "0");
 				}
 				response.getWriter().write(new ObjectMapper().writeValueAsString(returnvalue));
@@ -101,7 +105,7 @@ public class Payquery implements Filter {
 				returnvalue.put("code", "1");
 				throw new Exception("Wrong postdata =["+jb.toString()+"] orderid=[" + orderid + "],ali_order_no=["
 						+ ali_order_no + "],nonce_str=[" + nonce_str
-						+ "],your sign=[" + sign + "],expected sign=[" + expectedsign + "]");
+						+ "],your sign=[" + sign + "]");
 			}
 		} catch (Exception e) {
 			StringWriter errors = new StringWriter();
@@ -120,6 +124,5 @@ public class Payquery implements Filter {
 	public void init(FilterConfig arg0) throws ServletException {
 
 	}
-	
 
 }

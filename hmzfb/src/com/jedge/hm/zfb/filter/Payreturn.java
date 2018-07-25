@@ -82,7 +82,7 @@ public class Payreturn implements Filter {
 				//out.println("验证失败");
 			}
 			String url = Config.HUAXIN_PAYRETURN+"?orderid="+out_trade_no;
-			System.out.println(new Date()+" ==== after zfb pay result ["+verify_result+"] and got to ["+url+"]");
+			System.out.println(new Date()+" ==== after zfb pay result ["+verify_result+"] and go to ["+url+"]");
 			response.sendRedirect(url);
 		} catch (Exception e) {
 			StringWriter errors = new StringWriter();

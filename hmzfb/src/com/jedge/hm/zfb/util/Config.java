@@ -25,6 +25,7 @@ public class Config  implements ServletContextListener{
 	public static String HUAMEI_ZFBAPPID=null;
 	public static String HUAMEI_ZFBPRIKEY=null;
 	public static String HUAMEI_ZFBPUBKEY=null;
+	public static String HUAMEI_ZFBALLOWIP=null;
 		
 	/**
 	 * 创建md5摘要,规则是:按参数名称a-z排序,遇到空值的参数不参加签名。 sign
@@ -144,6 +145,14 @@ public class Config  implements ServletContextListener{
 							if (HUAMEI_ZFBPUBKEY==null||!HUAMEI_ZFBPUBKEY.equals(newZFBPUBKEY)) {
 								System.out.println(new Date()+" ==== changed HUAMEI_ZFBPUBKEY from ["+HUAMEI_ZFBPUBKEY+"] to ["+newZFBPUBKEY+"]");
 								HUAMEI_ZFBPUBKEY = newZFBPUBKEY;
+							}
+						}
+						
+						if (Files.exists(Paths.get("zfbconfig/ZFBALLOWIP"))) {
+							String newZFBALLOWIP = Files.readAllLines(Paths.get("zfbconfig/ZFBALLOWIP"),Charset.forName("UTF-8")).get(0);
+							if (HUAMEI_ZFBALLOWIP==null||!HUAMEI_ZFBALLOWIP.equals(newZFBALLOWIP)) {
+								System.out.println(new Date()+" ==== changed HUAMEI_ZFBALLOWIP from ["+HUAMEI_ZFBALLOWIP+"] to ["+newZFBALLOWIP+"]");
+								HUAMEI_ZFBALLOWIP = newZFBALLOWIP;
 							}
 						}
 						

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URLEncoder;
-import java.util.Date;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -84,7 +83,6 @@ public class Authback implements Filter {
 							+ sex + "&headimgurl=" + headimgurl + "&unionid=" + unionid + "&scanWay=" + scanWay
 							+ "&province=" + province + "&city=" + city + "&country=" + country + "&codeString="
 							+ codeString + "&projectId=" + projectId;
-					System.out.println(new Date()+" ==== after auth ["+url+"]");
 					response.sendRedirect(url);
 				} else {
 					throw new Exception("Wrong zfbinfo format=" + URLEncoder.encode(zfbinfo, "UTF-8"));

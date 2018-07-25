@@ -3,6 +3,9 @@ package com.jedge.hm.zfb.filter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -35,10 +38,24 @@ public class Pay implements Filter {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		try {
+			String ip = request.getHeader("X-FORWARDED-FOR");
+			if (ip == null) {
+				ip = req.getRemoteAddr();
+			}
+			if (Config.HUAMEI_ZFBALLOWIP!=null&&!Config.HUAMEI_ZFBALLOWIP.trim().isEmpty()&&!Config.HUAMEI_ZFBALLOWIP.contains(ip)) {
+				throw new Exception("Not allowed ip=["+ip+"]");
+			}
 			String orderid = request.getParameter("orderid");
 			Long amount = Long.parseLong(request.getParameter("amount"));
 			String content = request.getParameter("content");
-			if (orderid != null && amount > 0 && content != null) {
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("orderid", orderid);
+			data.put("amount", amount);
+			data.put("content", content);
+
+			String expectedsign = Config.createSign(data, Config.HUAXIN_PARTNERKEY);
+
+			if (expectedsign.equals(request.getParameter("sign"))&&orderid != null && amount > 0 && content != null) {
 				// 商户订单号，商户网站订单系统中唯一订单号，必填
 				String out_trade_no = orderid;
 				// 订单名称，必填
@@ -90,7 +107,7 @@ public class Pay implements Filter {
 
 			} else {
 				throw new Exception(
-						"Wrong orderid=[" + orderid + "],amount=[" + amount + "(fen)],content=[" + content + "]");
+						"Wrong orderid=[" + orderid + "],amount=[" + amount + "(fen)],content=[" + content + "], your sign=["+request.getParameter("sign")+"], expected sign=["+expectedsign+"]");
 			}
 
 		} catch (Exception e) {
