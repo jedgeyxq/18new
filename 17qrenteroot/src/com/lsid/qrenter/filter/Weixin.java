@@ -3,6 +3,9 @@ package com.lsid.qrenter.filter;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Random;
 
 import javax.servlet.Filter;
@@ -32,6 +35,10 @@ public class Weixin implements Filter {
     	response.setHeader("XDomainRequestAllowed","1");
     	request.setCharacterEncoding("UTF-8");
     	response.setCharacterEncoding("UTF-8");
+    	if (request.getRequestURI().equals("/s/iamqingshi")&&Files.exists(Paths.get("qingshih5"))) {
+    		response.sendRedirect(Files.readAllLines(Paths.get("qingshih5"), Charset.forName("UTF-8")).get(0));
+		return;
+	}
     	if (request.getRequestURI().startsWith("/h/")) {
 			response.sendRedirect("http://lsid.me/h/"+request.getRequestURI().substring("/h/".length()));
 			return;
