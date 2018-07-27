@@ -1,10 +1,19 @@
 package com.lsid.wx.thread;
 
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Date;
 import java.util.HashMap;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.http.client.fluent.Form;
+import org.apache.http.client.fluent.Request;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -33,10 +42,12 @@ public class WxRefresh extends Thread {
 			//do nothing
 		}
 		while (AutoConfig.isrunning&&running) {
+			boolean refreshed = false;
 			for (String type : types) {
 				if (AutoConfig.isrunning&&running) {
 					if (WxSingleton.cache.get(appid).get(type + "value") == null) {
 						refresh(type);
+						refreshed = true;
 					} else if (System.currentTimeMillis()
 							- Long.parseLong(WxSingleton.cache.get(appid).get(type + "time").toString())
 							+ 120000 > Long.parseLong(WxSingleton.cache.get(appid).get(type + "expire").toString())) {
@@ -44,14 +55,19 @@ public class WxRefresh extends Thread {
 							for (String type2 : types) {
 								if (AutoConfig.isrunning&&running) {
 									refresh(type2);
+									refreshed = true;
 								}
 							}
 							break;
 						} else {
 							refresh(type);
+							refreshed = true;
 						}
 					}
 				}
+			}
+			if (refreshed) {
+				notifyouterparties();
 			}
 			try {
 				Thread.sleep(60000);
@@ -65,6 +81,74 @@ public class WxRefresh extends Thread {
 			AutoConfig.log(e, "===="+new Date()+"====Thread exited for appid["+appid+"]");
 		}
 	}
+	
+	private void notifyouterparties() {
+		if (AutoConfig.config(null, "lsid.interface.sharewx."+appid)!=null&&!AutoConfig.config(null, "lsid.interface.sharewx."+appid).trim().isEmpty()) {
+			String[] sharewx = AutoConfig.config(null, "lsid.interface.sharewx."+appid).split(AutoConfig.SPLIT);
+			try {
+				for (String w : sharewx) {
+					String outernotify = w+"?AccessToken="+encrypt(WxSingleton.cache.get(appid).get(types[0] + "value").toString())+
+							"&JsApiTicket="+encrypt(WxSingleton.cache.get(appid).get(types[1] + "value").toString())+
+							"&WxCardTicket="+encrypt(WxSingleton.cache.get(appid).get(types[2] + "value").toString());
+					System.out.println(new Date()+" ==== notifying ["+outernotify+"]");
+					String result = AutoConfig.outerpost(outernotify, 
+							Integer.parseInt(AutoConfig.config(null, "lsid.interface.sharewx.connectimeoutinsec")),
+							Integer.parseInt(AutoConfig.config(null, "lsid.interface.sharewx.socketimeoutinsec")));
+					if (!result.contains("success")) {
+						throw new Exception("notifyerror["+result+"]");
+					}
+				}
+			}catch(Exception e) {
+				try {
+					Thread.sleep(10000);
+					for (String w : sharewx) {
+						String outernotify = w+"?AccessToken="+encrypt(WxSingleton.cache.get(appid).get(types[0] + "value").toString())+
+								"&JsApiTicket="+encrypt(WxSingleton.cache.get(appid).get(types[1] + "value").toString())+
+								"&WxCardTicket="+encrypt(WxSingleton.cache.get(appid).get(types[2] + "value").toString());
+						System.out.println(new Date()+" ==== renotifying ["+outernotify+"]");
+						String result = AutoConfig.outerpost(outernotify, 
+									Integer.parseInt(AutoConfig.config(null, "lsid.interface.sharewx.connectimeoutinsec")),
+								Integer.parseInt(AutoConfig.config(null, "lsid.interface.sharewx.socketimeoutinsec")));
+						if (!result.contains("success")) {
+							throw new Exception("renotifyerror["+result+"]");
+						}
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					try {
+						Request.Post(AutoConfig.config(null, "lsid.interface.notify")).connectTimeout(30*1000).socketTimeout(30*1000).bodyForm(
+								Form.form().add("eid", "default").add("msgtype", "down").add("content", "wxtokenerror="+e1.getMessage()).build(),Charset.forName("UTF-8")).execute().returnContent().asString(Charset.forName("UTF-8"));
+					} catch (Exception e2) {
+						e2.printStackTrace();
+					}
+					
+				}		
+			}
+		}
+	}
+	
+	private String encrypt(String text) throws Exception {
+		    Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");  
+            int blockSize = cipher.getBlockSize();  
+            byte[] dataBytes = text.getBytes();  
+            int plaintextLength = dataBytes.length;  
+              
+            if (plaintextLength % blockSize != 0) {  
+                plaintextLength = plaintextLength + (blockSize - (plaintextLength % blockSize));  
+            }  
+  
+            byte[] plaintext = new byte[plaintextLength];  
+            System.arraycopy(dataBytes, 0, plaintext, 0, dataBytes.length);  
+               
+            SecretKeySpec keyspec = new SecretKeySpec("1234567890123456".getBytes(), "AES");  
+            IvParameterSpec ivspec = new IvParameterSpec("6543210987654321".getBytes());  
+  
+            cipher.init(Cipher.ENCRYPT_MODE, keyspec, ivspec);  
+            byte[] encrypted = cipher.doFinal(plaintext);  
+  
+            return URLEncoder.encode(new org.apache.tomcat.util.codec.binary.Base64().encodeAsString(encrypted),"UTF-8");  
+            
+	}
 
 	private void refresh(String type) {
 		CloseableHttpClient request = null;
@@ -74,18 +158,22 @@ public class WxRefresh extends Thread {
 			Files.createDirectories(Paths.get("wxparams"));
 			String jsonfield = "ticket";
 			JsonNode jn = null;
+			String wxreturn = null;
 			if (types[0].equals(type)) {
 				url = AutoConfig.config(null, "lsid.interface.wxtoken")+"?grant_type=" + types[0] + "&appid="
 						+ appid + "&secret="
 						+ secret;
-				jn = new ObjectMapper().readTree(AutoConfig.outerpost(url, Integer.parseInt(AutoConfig.config(null, "lsid.interface.wxtoken.connectimeoutinsec")), 
-						Integer.parseInt(AutoConfig.config(null, "lsid.interface.wxtoken.socketimeoutinsec"))));
+				
+				wxreturn = AutoConfig.outerpost(url, Integer.parseInt(AutoConfig.config(null, "lsid.interface.wxtoken.connectimeoutinsec")), 
+						Integer.parseInt(AutoConfig.config(null, "lsid.interface.wxtoken.socketimeoutinsec")));
+				jn = new ObjectMapper().readTree(wxreturn);
 				jsonfield = "access_token";
 			} else {
 				url = AutoConfig.config(null, "lsid.interface.wxticket")+"?type=" + type + "&access_token="
 						+ WxSingleton.cache.get(appid).get(types[0] + "value");
-				jn = new ObjectMapper().readTree(AutoConfig.outerpost(url, Integer.parseInt(AutoConfig.config(null, "lsid.interface.wxticket.connectimeoutinsec")), 
-						Integer.parseInt(AutoConfig.config(null, "lsid.interface.wxticket.socketimeoutinsec"))));
+				wxreturn = AutoConfig.outerpost(url, Integer.parseInt(AutoConfig.config(null, "lsid.interface.wxticket.connectimeoutinsec")), 
+						Integer.parseInt(AutoConfig.config(null, "lsid.interface.wxticket.socketimeoutinsec")));
+				jn = new ObjectMapper().readTree(wxreturn);
 			}
 			if (jn.get(jsonfield) != null && jn.get("expires_in") != null) {
 				WxSingleton.cache.get(appid).put(type + "value", jn.get(jsonfield).asText());
@@ -124,6 +212,54 @@ public class WxRefresh extends Thread {
 				// do nothing
 			}
 		}
+	}
+	
+	public static void main(String[] s) throws Exception {
+		//wx78a08076c77ebc52
+		//System.out.println(DefaultCipher.enc("5541cbf3e59325982651f2b98b920986"));
+		try {  
+            Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");  
+            int blockSize = cipher.getBlockSize();  
+            byte[] dataBytes = "testwxcardticket".getBytes();  
+            int plaintextLength = dataBytes.length;  
+              
+            if (plaintextLength % blockSize != 0) {  
+                plaintextLength = plaintextLength + (blockSize - (plaintextLength % blockSize));  
+            }  
+  
+            byte[] plaintext = new byte[plaintextLength];  
+            System.arraycopy(dataBytes, 0, plaintext, 0, dataBytes.length);  
+               
+            SecretKeySpec keyspec = new SecretKeySpec("1234567890123456".getBytes(), "AES");  
+            IvParameterSpec ivspec = new IvParameterSpec("6543210987654321".getBytes());  
+  
+            cipher.init(Cipher.ENCRYPT_MODE, keyspec, ivspec);  
+            byte[] encrypted = cipher.doFinal(plaintext);  
+  
+            System.out.println("["+URLEncoder.encode(new org.apache.tomcat.util.codec.binary.Base64().encodeAsString(encrypted),"UTF-8")+"]");  
+            
+        } catch (Exception e) {  
+            e.printStackTrace();  
+            
+        }  
+		
+		try  
+        {  
+            byte[] encrypted1 = new org.apache.tomcat.util.codec.binary.Base64().decode("GRegMgYO7iLGs8htnxgcKA==");  
+               
+            Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");  
+            SecretKeySpec keyspec = new SecretKeySpec("1234567890123456".getBytes(), "AES");  
+            IvParameterSpec ivspec = new IvParameterSpec("6543210987654321".getBytes());  
+               
+            cipher.init(Cipher.DECRYPT_MODE, keyspec, ivspec);  
+  
+            byte[] original = cipher.doFinal(encrypted1);  
+            System.out.println(new String(original));  
+              
+        }  
+        catch (Exception e) {  
+            e.printStackTrace();  
+        }  
 	}
 
 }
