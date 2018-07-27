@@ -107,7 +107,7 @@ public class Pay implements Filter {
 
 			} else {
 				throw new Exception(
-						"Wrong orderid=[" + orderid + "],amount=[" + amount + "(fen)],content=[" + content + "], your sign=["+request.getParameter("sign")+"], expected sign=["+expectedsign+"]");
+						"Wrong orderid=[" + orderid + "],amount=[" + amount + "(fen)],content=[" + content + "], your sign=["+request.getParameter("sign")+"]");
 			}
 
 		} catch (Exception e) {
