@@ -59,7 +59,6 @@ public class Wxauthinfoandplay implements Filter {
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
 		
-		
 	}
 
 }
