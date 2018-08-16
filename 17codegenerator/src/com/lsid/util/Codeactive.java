@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -19,9 +20,33 @@ import org.apache.http.client.fluent.Request;
 
 import sun.misc.BASE64Encoder;
 
+@SuppressWarnings("restriction")
 public class Codeactive {
-	
 	public static void main(String[] s) throws Exception{
+		Form f = Form.form();
+		byte[] raw = DefaultCipher.dec("a8SjXEF%2B5l9HR80Za%2Fzb%2FVM8zAbzeV9lttzTcKQ%2FIbw%3D").getBytes("utf-8");
+		SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+		Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+		cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+		String line = "line0";
+		String batch = "batch0";
+		String prod = "prod0";
+		String eid="t1";
+		String apikey = DefaultCipher.dec("3GYmNwr6sjodinms6%2FoKcWbFyxtQusBvOL4OoWIjrOk5pBaQsPQYzIHw%2B%2FskjTyU");
+		Vector<String> code = new Vector<String>();
+		code.add("http://0k6.cn/"+eid+"/testactive201808141350");
+		for (String co : code) {
+			String data = co + "#"+line+"#"+batch+"#"+prod+"#" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+			String encline = new BASE64Encoder().encode(cipher.doFinal(data.getBytes("UTF-8")));
+			f.add("data", encline);
+		}
+		String params = "user=" + eid + "&active=a5&t=" + System.currentTimeMillis();
+		String sign = sign(params + "&key=" + apikey);
+		String res = Request.Post("http://ha0q.cn/17newlscode?" + params + "&sign=" + sign).bodyForm(f.build())
+				.execute().returnContent().asString();
+		System.out.println(res);
+	}
+	public static void main2(String[] s) throws Exception{
 		
 		String eid=s[0];
 		String apikey = DefaultCipher.dec(s[1]);
@@ -58,6 +83,7 @@ public class Codeactive {
 		
 	}
 
+	@SuppressWarnings("restriction")
 	public static void lscode(Path logfile, String eid, String apikey, String encryptsecret, String line, String batch, String prod, List<String> code) throws Exception {
 		Form f = Form.form();
 		byte[] raw = encryptsecret.getBytes("utf-8");
