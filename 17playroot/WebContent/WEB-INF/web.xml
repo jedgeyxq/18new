@@ -11,6 +11,18 @@
     <filter-name>autoconfigfilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+  
+    <filter>
+    <filter-name>share</filter-name>
+    <filter-class>
+	 	com.lsid.play.filter.Share
+	</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>share</filter-name>
+    <url-pattern>/share/*</url-pattern>
+  </filter-mapping>
+  
   <filter>
     <filter-name>secure</filter-name>
     <filter-class>
