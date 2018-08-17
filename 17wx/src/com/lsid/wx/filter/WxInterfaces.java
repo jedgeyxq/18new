@@ -1,7 +1,6 @@
 package com.lsid.wx.filter;
 
 import java.io.IOException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -188,7 +187,7 @@ public class WxInterfaces implements Filter {
         String params = "jsapi_ticket=" + cache.get(AutoConfig.config(eid, "lsid.playwx.appid")+"jsapi") +
                   "&noncestr=" + noncestr +
                   "&timestamp=" + timestamp +
-                  "&url=" + URLDecoder.decode(url,"UTF-8");
+                  "&url=" + url;
 
         MessageDigest crypt = MessageDigest.getInstance("SHA-1");
         crypt.reset();
