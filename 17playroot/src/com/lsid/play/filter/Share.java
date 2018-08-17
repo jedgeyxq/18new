@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -108,6 +109,10 @@ public class Share implements Filter {
 								prefix + otheropenid, "c", 1);
 						AutoConfig.cacheuserdata(eid, myopenid, "shareprize", prefix + myopenid + otheropenid, "f",
 								"fired");
+						
+						AutoConfig.cacheuserdata(eid, otheropenid, "shareprize", otheropenid + otherfired, "whofired",
+								encuserinfo);
+						
 						returnvalue.put("code", 5);
 						if (dataticket != null) {
 							this.datarecord(dataticket, ip, useragent, request.getParameter("lng"),
@@ -139,6 +144,27 @@ public class Share implements Filter {
 								request.getParameter("lat"), "0", "");
 					}
 				} else {
+					Vector<Map<String, String>> whofired = new Vector<Map<String, String>>();
+					for (int i =1;i<7;i++) {
+						try {
+							String encotheruserinfo = AutoConfig.cacheuserdata(eid, myopenid, "shareprize", myopenid + i, "whofired");
+							Map<String, String> info = new HashMap<String, String>();
+							String openid = DefaultCipher
+									.enc((new ObjectMapper()).readTree(DefaultCipher.dec(encotheruserinfo)).get("openid").asText());
+							String head = (new ObjectMapper()).readTree(DefaultCipher.dec(encotheruserinfo)).get("headimgurl").asText();
+							String nick = (new ObjectMapper()).readTree(DefaultCipher.dec(encotheruserinfo)).get("nickname").asText();
+							returnvalue.put("openid", DefaultCipher.enc(openid));
+							returnvalue.put("head", head);
+							returnvalue.put("nick", nick);
+							whofired.add(info);
+						}catch(Exception e) {
+							break;
+						}
+					}
+					if (whofired.size()==6) {
+						returnvalue.put("whofired", whofired);
+					}
+					
 					List<String> paramvalueslist = new ArrayList<String>();
 					paramvalueslist.add("eid");
 					paramvalueslist.add(eid);
