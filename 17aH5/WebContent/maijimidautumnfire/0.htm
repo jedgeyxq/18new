@@ -152,6 +152,27 @@ sessionStorage.setItem("result",JSON.stringify(data));
 					$(".pop").hide();
 					popshow("ticket");
 					initwxjssdk(data);
+					if (data.whofired&&data.whofired.length==6){
+						$("body").append("<div id='whofired' style='position:fixed;z-index:10006;top:30px;left:2vw;width:96vw;height:16vw;'><font style='position:absolute;top:0px;left:50%;font:14px Arial;transform:translateX(-50%) translateY(-110%);'>为你点燃火把的好友</font></div>");
+						for (var i=0;i<6;i++){
+							$("#whofired").append("<div id='whofired"+i+"' style='position:absolute;text-align:center;display:none;left:"+16*i+"vw;width:16vw;height:16vw;top:0px;'>"+
+												"<img src='"+data.whofired[i].head+"' style='width:70%;border-radius:16vw;'/>"+
+												"<font style='position:absolute;height:10px;font:10px Arial;left:0px;right:0px;bottom:0px;word-wrap:break-word;'>"+data.whofired[i].nick+"</font>"+
+												"</div>");
+						}
+						$("#whofired0").fadeIn(400,function(){
+							$("#whofired1").fadeIn(400,function(){
+								$("#whofired2").fadeIn(400,function(){
+									$("#whofired3").fadeIn(400,function(){
+										$("#whofired4").fadeIn(400,function(){
+											$("#whofired5").fadeIn(400,function(){
+											});
+										});
+									});
+								});
+							});
+						});
+					}
 				} else if (data.code==7){
 					popshow("sharefired");
 					$("#metoo").show();
