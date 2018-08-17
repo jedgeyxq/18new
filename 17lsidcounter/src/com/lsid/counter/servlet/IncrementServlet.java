@@ -129,10 +129,11 @@ public class IncrementServlet extends HttpServlet {
 				CounterUtil.cache(namespace, tablename, column, hash, row);
 			}
 				
+			long incremented = 0l;
 			if (amountnum!=0){
 				
 				FileCache4Later.later(namespace, tablename, column, hash, row, amountnum);
-				CounterUtil.incrementcache(namespace, tablename, column, hash, row, amountnum);
+				incremented = CounterUtil.incrementcache(namespace, tablename, column, hash, row, amountnum);
 				if (request.getParameter("more")!=null){
 					Date todaydate = new Date();
 					String today = new SimpleDateFormat("yyyyMMdd").format(todaydate);
@@ -149,13 +150,13 @@ public class IncrementServlet extends HttpServlet {
 				Files.write(CounterUtil.tosort.resolve(namespace+AutoConfig.SPLIT+column+AutoConfig.SPLIT+tablename), new byte[0], StandardOpenOption.CREATE);
 				CounterUtil.incrementcache(namespace, tablename, column, hash, row, 0);
 			}
-			AutoConfig.innerechok(response, String.valueOf(CounterUtil.incrementedcache(namespace, tablename, column, hash, row)));
+			AutoConfig.innerechok(response, String.valueOf(incremented));
 		}catch(Exception e){
 			if (e.getMessage().contains("==lsidnotfound==")){
 				try{
 					if (amountnum!=0){
 						FileCache4Later.later(namespace, tablename, column, hash, row, amountnum);
-						CounterUtil.incrementcache(namespace, tablename, column, hash, row, amountnum);
+						long incremented = CounterUtil.incrementcache(namespace, tablename, column, hash, row, amountnum);
 						if (request.getParameter("more")!=null){
 							Date todaydate = new Date();
 							String today = new SimpleDateFormat("yyyyMMdd").format(todaydate);
@@ -163,7 +164,7 @@ public class IncrementServlet extends HttpServlet {
 							incrementauto(namespace, tablename, column, hash, row, today, amountnum);
 							incrementauto(namespace, tablename, column, hash, row, thismonth, amountnum);
 						}
-						AutoConfig.innerechok(response, String.valueOf(CounterUtil.incrementedcache(namespace, tablename, column, hash, row)));
+						AutoConfig.innerechok(response, String.valueOf(incremented));
 					} else {
 						AutoConfig.innerechok(response, "0");
 					}
