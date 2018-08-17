@@ -1,11 +1,17 @@
 package com.lsid.qrenter.filter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import javax.servlet.Filter;
@@ -35,6 +41,25 @@ public class Weixin implements Filter {
     	response.setHeader("XDomainRequestAllowed","1");
     	request.setCharacterEncoding("UTF-8");
     	response.setCharacterEncoding("UTF-8");
+    	Path gofile = Paths.get(request.getRequestURI().replaceAll("/", ""));
+		if (Files.exists(gofile)) {
+			List<String> go = Files.readAllLines(gofile, Charset.forName("UTF-8"));
+			if (go != null && !go.isEmpty()) {
+				try {
+					if ((new Date()).after(
+							(new SimpleDateFormat("yyyyMMddhhmmss")).parse(((String) go.get(0)).substring(0, 14)))) {
+						response.sendRedirect(((String) go.get(0)).substring(14));
+						return;
+					}
+				} catch (Exception e) {
+					StringWriter errors = new StringWriter();
+					e.printStackTrace(new PrintWriter(errors));
+					response.getWriter().write(errors.toString());
+					return;
+				}
+			}
+		}
+
     	if (request.getRequestURI().equals("/s/iamqingshi")&&Files.exists(Paths.get("qingshih5"))) {
     		response.sendRedirect(Files.readAllLines(Paths.get("qingshih5"), Charset.forName("UTF-8")).get(0));
 		return;
