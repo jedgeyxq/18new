@@ -1,0 +1,293 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
+		<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<meta name="mobileoptimized" content="0"/>
+		<title id="title">麦吉鲜烤助力</title>
+		<meta name="description" content="麦吉鲜烤助力" />
+  		<meta name="Keywords" content="麦吉鲜烤助力" />
+  		<style type="text/css">
+  			.float{
+  				animation: floating 2s ease-in 0s infinite alternate;
+			}
+			@keyframes floating
+			{
+				0%   {transform:translateY(-5%);}
+				50%   {transform: translateY(0%);}
+				100%   {transform:translateY(5%);}
+			}
+
+			.metooclass{
+				position:absolute;
+  				left:50%;
+  				height:8vh;
+  				bottom:25vh;
+  				transform: translateX(-50%) translateY(-50%);
+  			}
+
+  			.bubble{
+  				position:absolute;
+  				left:50%;
+  				height:8vh;
+  				bottom:25vh;
+  				transform: translateX(-50%) translateY(-100%);
+				animation: bubbling 2s ease-in 0s infinite forwards;
+			}
+			@keyframes bubbling
+			{
+				0%   {height:8vh;transform:translateX(-50%) translateY(-50%) rotate(0deg);}
+				90%   {height:8vh;transform:translateX(-50%) translateY(-50%) rotate(0deg);}
+				95%   {height:10vh;transform:translateX(-50%) translateY(-50%) rotate(5deg);}
+				98%   {height:10vh;transform:translateX(-50%) translateY(-50%) rotate(-5deg);}
+				100%   {height:8vh;transform:translateX(-50%)  translateY(-50%) rotate(0deg);}
+			}
+  		
+  			.burn{
+  				position:absolute;
+  				left:-1.5px;
+  				bottom:1px;
+  				width:100%;
+				height:100%;
+				background-size:100% 100%;
+				background-repeat:no-repeat;
+				animation: burning 1.5s ease-out 0.7s infinite forwards;
+			}
+			@keyframes burning
+			{
+				0%   {background-image:url(images/burning1.png);}
+				10%   {background-image:url(images/burning4.png);}
+				20%   {background-image:url(images/burning2.png);}
+				30%   {background-image:url(images/burning3.png);}
+				40%   {background-image:url(images/burning2.png);}
+				50%   {background-image:url(images/burning3.png);}
+				60%   {background-image:url(images/burning1.png);}
+				70%   {background-image:url(images/burning4.png);}
+				80%   {background-image:url(images/burning2.png);}
+				90%   {background-image:url(images/burning3.png);}
+				100%   {background-image:url(images/burning2.png);}
+			}
+
+  			.tellfire{
+  				animation: tellfiring 1s ease-out 0s infinite alternate;
+			}
+			@keyframes tellfiring
+			{
+				0%   {opacity:0;transform:translateX(0%) translateY(0%);}
+				100%   {opacity:1;transform:translateX(-20%) translateY(100%);}
+			}
+
+  			.fire1{
+  				left:0vw;
+				background-size:100% 100%;
+				background-repeat:no-repeat;
+				animation: fireing 1s ease 0s forwards;
+			}
+  			.fire2{
+  				left:16vw;
+				background-size:100% 100%;
+				background-repeat:no-repeat;
+				animation: fireing 1s ease 0s forwards;
+			}
+  			.fire3{
+  				
+				background-size:100% 100%;
+				background-repeat:no-repeat;
+				animation: fireing 1s ease 0s forwards;
+			}
+  			.fire4{
+  				left:48vw;
+				background-size:100% 100%;
+				background-repeat:no-repeat;
+				animation: fireing 1s ease 0s forwards;
+			}
+  			.fire5{
+  				left:64vw;
+				background-size:100% 100%;
+				background-repeat:no-repeat;
+				animation: fireing 1s ease 0s forwards;
+			}
+  			.fire6{
+  				left:80vw;
+				background-size:100% 100%;
+				background-repeat:no-repeat;
+				animation: fireing 1s ease 0s forwards;
+			}
+			@keyframes fireing
+			{
+				0%   {background-image:url(images/fire1.png);}
+				10%   {background-image:url(images/fire2.png);}
+				20%   {background-image:url(images/fire3.png);}
+				30%   {background-image:url(images/fire4.png);}
+				40%   {background-image:url(images/fire5.png);}
+				50%   {background-image:url(images/fire6.png);}
+				60%   {background-image:url(images/fire7.png);}
+				70%   {background-image:url(images/fire8.png);}
+				80%   {background-image:url(images/fire9.png);}
+				90%   {background-image:url(images/fire10.png);}
+				100%   {background-image:url(images/fire1.png);}		
+			}
+
+  			.loadingout{
+				animation: loadingouting 0.5s linear 0s forwards;
+			}
+			@keyframes loadingouting
+			{
+				0%   {top:0px;bottom:0px;}
+				100%   {top:-100%;bottom:100%;}
+			}
+  			.msg{
+				display:none;
+				position:absolute;
+				z-index:10006;
+				width:80%;
+				top:50%;
+				left:50%;
+				transform: translateX(-50%) translateY(-50%);
+			}
+			.toplayerbottomcenter{
+				z-index:10001;
+				display:none;
+				position:absolute;
+				height:40px;
+				top:100%;
+				left:50%;
+				transform: translateX(-50%) translateY(-105%);
+			}
+		</style>
+		<script type="text/javascript" src="3rdjs/jquery-3.3.1.min.js"></script>
+		<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+		<script type="text/javascript" src="myjs/core.js"></script>
+		<script type="text/javascript">
+		function init(){
+			pophide();
+			if (window.location.href.split("?").length!=2){
+				alert("非法访问，请重新扫码！");
+			} else {
+				var ticket = sessionStorage.getItem("ticket");
+				var eid = sessionStorage.getItem("eid");
+				var data = JSON.parse(sessionStorage.getItem("result"));
+				
+				var otheropenid = "";
+				var params = window.location.href.split("?")[1].split("&");
+				for (var i=0;i<params.length;i++){
+					if (params[i].split("=")[0]=="otheropenid"){
+						otheropenid = params[i].split("=")[1];
+					} 
+				}
+				if (ticket==null||eid==null||data==null||otheropenid==""){
+					window.location.href="http://ha0x.cn/wxscanauthuuid/m/iamaijifire";
+				} else {
+					imagesloaded(function(){
+						$(".hideall").hide();
+						$("#loading").addClass("loadingout");
+						setTimeout(function(){animate(1);},300);
+					});
+			}
+
+				$("#tellfire").attr("index",data.fired+1);
+$("#tellfire").css("left",$("#fire"+(data.fired+1)).position().left);
+				$("#tellfire").css("top",$("#fire"+(data.fired+1)).position().top);
+$("body").append("<img id='otherhead' src='"+data.otherhead+
+						"' class='tellfire' style='position:absolute;left:"+($("#tellfire").position().left+$("#tellfire").width()*4/5)+"px;top:"+($("#tellfire").position().top+$("#tellfire").height())+";width:5vh;border-radius:5vh;overflow:hidden;'>");
+								
+$("#title").html(data.othernick+"的"+$("#title").html());	
+				var fire = function(){
+					$(this).unbind("click");
+					post(null,{"fired":"fired","eid":eid,"otheropenid":otheropenid},function(data){
+			        		if (data.code==5){
+			        			$(".tellfire").hide();
+			        			$("#fire"+$("#tellfire").attr("index")).addClass("fire"+$("#tellfire").attr("index"));
+			        			$("#burn"+$("#tellfire").attr("index")).addClass("burn");
+			        			$("#nofire"+$("#tellfire").attr("index")).hide();
+sessionStorage.removeItem("ticket");
+				sessionStorage.removeItem("eid");
+				sessionStorage.removeItem("result");			        
+			setTimeout(function(){
+			        				popshow("sharefired");
+				        			setTimeout(pophide,3000);
+			        			},1200);
+			        			
+			        		} else {
+			        			popshow("errordata");
+			        		}
+			        });
+				}
+				$("#fire"+(data.fired+1)).bind("click",fire);
+				$("#tellfire").click(function(){$("#fire"+$(this).attr("index")).click();});
+$("#otherhead").click(function(){$("#fire"+$("#tellfire").attr("index")).click();});
+
+}
+			$("#metoo").click(function(){
+				window.location.href="http://ha0x.cn/wxscanauthuuid/m/iamaijifire";
+			});
+$("#rule").click(function(){
+$("#cover").show();
+				$("#ruledesc").fadeIn(500);
+			});
+			$("#ruleclose").click(function(){
+				$("#ruledesc").hide();
+$("#cover").hide();		
+	});			
+		}
+		function animate(i){
+			var data = JSON.parse(sessionStorage.getItem("result"));
+			if (i>data.fired||i>6){
+				return;
+			}
+			$("#fire"+i).addClass("fire"+i);
+			$("#burn"+i).addClass("burn");
+			$("#nofire"+i).hide();
+			setTimeout(function(){
+				animate(i+1);
+			},200);
+		}
+		
+		</script>
+	</head>
+	<body style="position:fixed;top:0px;left:0px;right:0px;bottom:0px;overflow:hidden;font:20px Arial;color:#bbb;text-align:center;background:#fff;margin:0px;">
+		<img id='loading' src='images/loading.jpg' style='position:absolute;top:0px;left:0px;width:100%;height:100%;z-index:10002;'/>
+		<img id="bg" src="images/bg.png" style="position:absolute;top:0px;left:0px;width:100%;height:100%;"/>
+	
+<img id="title" src="images/title.png" style="position:absolute;top:2vh;left:50%;height:20vh;transform: translateX(-50%);" />
+	
+		<img id="rule" src="images/rule.png" style="position:absolute;top:2vh;left:2vh;height:8vh;" />
+	
+<div id="ruledesc" style="position:absolute;display:none;z-index:11000;overflow:hidden;background-size:100% 100%;background-repeat:no-repeat;background-image:url(images/rulebg.png);width:80%;height:80%;top:50%;left:50%;transform:translateX(-50%) translateY(-50%);">
+		<div style="position:absolute;overflow-x:hidden;overflow-y:auto;top:60px;bottom:30px;left:0px;right:0px;"><img src="images/ruledesc.png" style="width:100%;"/></div>
+		<img id="ruleclose" src="images/ruleclose.png" style="position:absolute;top:0px;right:0px;width:30px;"/></div>
+		
+		
+			<div style="position:absolute;bottom:40vh;left:0px;width:100%;height:40vh;" class="float">
+			<img id="cakeman" src="images/cakeman.png" style="position:relative;height:100%;" />
+			<img id="come" src="images/come.png" style="position:absolute;bottom:0px;left:10px;height:50%;"/>
+			<img id="min" src="images/18min.png" style="position:absolute;top:0px;right:10px;height:50%;" />
+		</div>
+		<div style="position:absolute;width:100%;height:50px;text-align:center;bottom:25vh;">
+			<img id="metoo" src="images/metoo.png" style="height:100%;"/>
+		</div>	
+		
+		<img class="hideall" src="images/fire1.png"/>
+		<img class="hideall" src="images/fire2.png"/>
+		<img class="hideall" src="images/fire3.png"/>
+		<img class="hideall" src="images/fire4.png"/>
+		<img class="hideall" src="images/fire5.png"/>
+		<img class="hideall" src="images/fire6.png"/>
+		<img class="hideall" src="images/fire7.png"/>
+		<img class="hideall" src="images/fire8.png"/>
+		<img class="hideall" src="images/fire9.png"/>
+		<img class="hideall" src="images/fire10.png"/>
+		<img class="hideall" src="images/burning1.png"/>
+		<img class="hideall" src="images/burning2.png"/>
+		<img class="hideall" src="images/burning3.png"/>
+		<img class="hideall" src="images/burning4.png"/>
+		<img class="hideall" src="images/nofire.png"/>
+		<div id="fire1" style="left:2vw;position:absolute;width:9vh;height:23vh;bottom:2vh;"><img id="nofire1" src="images/nofire.png" style="position:absolute;left:50%;width:87%;height:27%;bottom:2px;transform: translateX(-50%);"/><div id="burn1"></div></div>
+		<div id="fire2" style="left:18vw;position:absolute;width:9vh;height:23vh;bottom:2vh;"><img id="nofire2" src="images/nofire.png" style="position:absolute;left:50%;width:87%;height:27%;bottom:2px;transform: translateX(-50%);"/><div id="burn2"></div></div>
+		<div id="fire3" style="left:34vw;position:absolute;width:9vh;height:23vh;bottom:2vh;"><img id="nofire3" src="images/nofire.png" style="position:absolute;left:50%;width:87%;height:27%;bottom:2px;transform: translateX(-50%);"/><div id="burn3"></div></div>
+		<div id="fire4" style="left:50vw;position:absolute;width:9vh;height:23vh;bottom:2vh;"><img id="nofire4" src="images/nofire.png" style="position:absolute;left:50%;width:87%;height:27%;bottom:2px;transform: translateX(-50%);"/><div id="burn4"></div></div>
+		<div id="fire5" style="left:66vw;position:absolute;width:9vh;height:23vh;bottom:2vh;"><img id="nofire5" src="images/nofire.png" style="position:absolute;left:50%;width:87%;height:27%;bottom:2px;transform: translateX(-50%);"/><div id="burn5"></div></div>
+		<div id="fire6" style="left:82vw;position:absolute;width:9vh;height:23vh;bottom:2vh;"><img id="nofire6" src="images/nofire.png" style="position:absolute;left:50%;width:87%;height:27%;bottom:2px;transform: translateX(-50%);"/><div id="burn6"></div></div>
+		<img id=sharefired class='pop msg' src='images/sharefired.png'/>
+		<div id="tellfire" class="tellfire" style="position:absolute;width:9vh;height:9vh;overflow:hidden;"><img src="images/cakeman.png" style="position:absolute;left:0px;top:0px;width:280%;transform:translateX(13%) translateY(-47%) rotate(-90deg);"/></div>
+	</body>
+</html>	

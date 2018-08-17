@@ -1,0 +1,188 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
+		<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<meta name="mobileoptimized" content="0"/>
+		<title>麦吉鲜烤助力</title>
+		<meta name="description" content="麦吉鲜烤助力" />
+  		<meta name="Keywords" content="麦吉鲜烤助力" />
+  		<style type="text/css">
+  			.countingdown0{
+				animation: countingdown0ing 1s linear 3.5s forwards;
+			}
+			@keyframes countingdown0ing
+			{
+				0%   {opacity:0.5;}
+				20%   {opacity:1;}
+				100%   {opacity:1;}
+			}
+  			.countingdown1{
+				animation: countingdown1ing 1s linear 2.5s forwards;
+			}
+			@keyframes countingdown1ing
+			{
+				0%   {opacity:0.5;}
+				20%   {opacity:1;}
+				100%   {opacity:0;}
+			}
+  			.countingdown2{
+				animation: countingdown2ing 1s linear 1.5s forwards;
+			}
+			@keyframes countingdown2ing
+			{
+				0%   {opacity:0.5;}
+				20%   {opacity:1;}
+				100%   {opacity:0;}
+			}
+  			.countingdown3{
+				animation: countingdown3ing 1s linear 0.5s forwards;
+			}
+			@keyframes countingdown3ing
+			{
+				0%   {opacity:0.5;}
+				20%   {opacity:1;}
+				100%   {opacity:0;}
+			}
+  			.msg{
+				display:none;
+				position:absolute;
+				z-index:10006;
+				width:80%;
+				top:50%;
+				left:50%;
+				transform: translateX(-50%) translateY(-50%);
+			}
+			.toplayerbottomcenter{
+				z-index:10006;
+				display:none;
+				position:absolute;
+				height:40px;
+				top:100%;
+				left:50%;
+				transform: translateX(-50%) translateY(-200%);
+			}
+		</style>
+		<script type="text/javascript" src="3rdjs/jquery-3.3.1.min.js"></script>
+		<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+		<script type="text/javascript" src="myjs/core.js"></script>
+		<script type="text/javascript">
+		function init(){
+			pophide();
+			if (window.location.href.split("?").length!=2){
+				alert("非法访问，请重新扫码！");
+			} else {
+				var ticket = "";
+				var otheropenid = "";
+				var eid = "";
+				var params = window.location.href.split("?")[1].split("&");
+				for (var i=0;i<params.length;i++){
+					if (params[i].split("=")[0]=="ticket"){
+						ticket = params[i].split("=")[1];
+					} else if (params[i].split("=")[0]=="otheropenid"){
+						otheropenid = params[i].split("=")[1];
+					} else if (params[i].split("=")[0]=="eid"){
+						eid = params[i].split("=")[1];
+					} 
+				}
+				if (ticket.length!=32){
+					alert("非法访问，请重新扫码！");
+				} else {
+					sessionStorage.setItem("ticket",ticket);
+					sessionStorage.setItem("eid",eid);
+					imagesloaded(function(){
+						post(null, {"eid":eid,"otheropenid":otheropenid,"url4wxjssdk":window.location.href}, function(data){
+							$(".countdown").show();
+							$("#countdown0").addClass("countingdown0");
+							$("#countdown1").addClass("countingdown1");
+							$("#countdown2").addClass("countingdown2");
+							$("#countdown3").addClass("countingdown3");
+							sessionStorage.setItem("data",JSON.stringify(data));
+							setTimeout(afterloading,4000);
+						});
+					});
+				}
+				
+			}
+			
+			$("#metoo").click(function(){
+				window.location.href="http://ha0x.cn/wxscanauthuuid/m/iamaijifire";
+			});
+			
+			$("#countdown").click(function(){
+				afterloading();
+			});
+			
+			$("#addcoupon").click(function(){
+				var data = JSON.parse($(this).attr("result"));
+				wx.addCard({
+				    cardList: data.coupon, 
+				    success: function (res) {
+				        post(null,{"prized":"prized","eid":sessionStorage.getItem("eid")},function(data){
+	$("#addcoupon").hide();
+				        		if (data.code==0){
+				        			popshow("prized");
+				        		} else {
+				        			popshow("errordata");
+				        		}
+				        });
+				    }
+				});
+			});
+		}
+		
+		function afterloading(){
+			if (sessionStorage.getItem("data")==null){
+				return;
+			}
+			var data = JSON.parse(sessionStorage.getItem("data"));
+			sessionStorage.removeItem("data");
+		$("#addcoupon").attr("result",JSON.stringify(data));	
+			if (data.code==2){
+sessionStorage.setItem("result",JSON.stringify(data));
+				//window.location.href="file:///Users/mido/git/18new/17aH5/WebContent/maijimidautumnfire/self.htm?otheropenid="+data.myopenid;
+				window.location.href=window.location.href.split("?")[0].replace("0\.htm","self.htm")+"?otheropenid="+data.myopenid;
+			} else if (data.code==6){
+sessionStorage.setItem("result",JSON.stringify(data));
+				//window.location.href="file:///Users/mido/git/18new/17aH5/WebContent/maijimidautumnfire/other.htm?otheropenid="+data.otheropenid;
+				window.location.href=window.location.href.split("?")[0].replace("0\.htm","other.htm")+"?otheropenid="+data.otheropenid;
+			} else {
+				$("#loading").hide();
+				$(".countdown").hide();
+				if (data.code==1){
+					$(".pop").hide();
+					popshow("ticket");
+					initwxjssdk(data);
+				} else if (data.code==7){
+					popshow("sharefired");
+					$("#metoo").show();
+				} else if (data.code==4){
+					popshow("shareprized");
+					$("#metoo").show();
+				} else if (data.code==3){
+					popshow("prized");
+				} else {
+					popshow("errordata");
+				}
+			}
+		}
+		function afterinitwxjssdk(){
+			$("#addcoupon").show();
+		}
+		</script>
+	</head>
+	<body style="position:fixed;top:0px;left:0px;right:0px;bottom:0px;overflow:hidden;font:20px Arial;color:#bbb;text-align:center;background:#fff;margin:0px;">
+		<img id='loading' src='images/loading.jpg' style='position:absolute;top:0px;left:0px;width:100%;height:100%;z-index:10002;'/>
+		<img id="bg" src="images/bg.png" style="position:absolute;top:0px;left:0px;width:100%;height:100%;"/>
+		<img id="metoo" src="images/metoo.png" class="toplayerbottomcenter"/>
+		<img id="addcoupon" src="images/addcoupon.png" class="toplayerbottomcenter"/>
+		<img id="countdown" class="countdown" src="images/countdown.png" style="display:none;position:absolute;z-index:10003;width:80px;top:5px;right:2px;"/>
+		<div id="countdown0" class="countdown" style="display:none;opacity:0;position:absolute;z-index:10003;top:5px;right:55px;color:white;">0</div>
+		<div id="countdown1" class="countdown" style="display:none;opacity:0;position:absolute;z-index:10003;top:5px;right:55px;color:white;">1</div>
+		<div id="countdown2" class="countdown" style="display:none;opacity:0;position:absolute;z-index:10003;top:5px;right:55px;color:white;">2</div>
+		<div id="countdown3" class="countdown" style="display:none;opacity:0;position:absolute;z-index:10003;top:5px;right:55px;color:white;">3</div>
+		<img id='prized' class='pop msg' src='images/prized.png'/>
+		<img id='ticket' class='pop msg' src='images/ticket.png'/>
+		<img id='shareprized' class='pop msg' style='transform: translateX(-50%) translateY(-100%);' src='images/shareprized.png'/>
+		<img id='sharefired' class='pop msg' style='transform: translateX(-50%) translateY(-100%);' src='images/sharefired.png'/>
+	</body>
+</html>	
