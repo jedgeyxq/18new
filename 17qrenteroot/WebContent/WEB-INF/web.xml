@@ -12,6 +12,7 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
   
+
   <filter>
     <filter-name>pubwxauthfilter</filter-name>
     <filter-class>
@@ -55,7 +56,29 @@
     <filter-name>wxauthinfoplayfilter</filter-name>
     <url-pattern>/wxauthinfoplay/*</url-pattern>
   </filter-mapping>
-  
+
+  <filter>
+    <filter-name>wxscanauthuuidfilter</filter-name>
+    <filter-class>
+	 	com.lsid.qrenter.filter.Wxscanandauthuuid
+	</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>wxscanauthuuidfilter</filter-name>
+    <url-pattern>/wxscanauthuuid/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>wxauthuuidinfofilter</filter-name>
+    <filter-class>
+	 	com.lsid.qrenter.filter.Wxauthuuidandinfo
+	</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>wxauthuuidinfofilter</filter-name>
+    <url-pattern>/wxauthuuidinfo/*</url-pattern>
+  </filter-mapping> 
+
   <filter>
     <filter-name>wxfilter</filter-name>
     <filter-class>
