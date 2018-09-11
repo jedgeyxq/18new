@@ -19,7 +19,7 @@ function post(ticket, datajson, yescallback){
 	　　	complete : function(XMLHttpRequest,status){
 	　　		if (status!="success"){
 	　　			ajaxpost.abort();
-		　　		alert("网络异常["+status+"]");
+		　　		alert("网络异常["+status+"],请检查网络连接后刷新页面！");
 	　　		}
 	　　	}
 	});

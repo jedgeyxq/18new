@@ -7,71 +7,83 @@
 		<meta name="description" content="大屏麦吉2018中秋" />
   		<meta name="Keywords" content="大屏麦吉2018中秋" />
   		<style type="text/css">
-  			.floatfont{
-  				position:relative;bottom:40%;line-height:18px;
-  			}
+
   			.floating{
-				animation: float 3s linear 0s infinite;
+				animation: float 3s linear 1s infinite;
 				position:relative;
-				word-wrap:break-word;height:55px;left:50%;transform:translateX(-50%);overflow:hidden;
+				word-wrap:break-word;
+				line-height:33px;
+				margin:1px;
+				padding-top:5px;
+				padding-bottom:5px;
 			}
 			
 			@keyframes float
 			{
-				0%   {font-size:15;}
-				50%   {font-size:13;}
-				100%   {font-size:15;}
+				0%   {font-size:33;}
+				50%   {font-size:31;}
+				100%   {font-size:33;}
 			}
 
-  			.showingtext{
-				animation: showtext 1s linear 0s forwards;
+  			.text0{
+  				text-align:right;
+				margin-right:45px;
+			}
+
+  			.text1{
+  				text-align:left;
+				margin-left:45px;
 			}
 			
+  			.showingtext{
+				animation: showtext 1s linear 0s forwards;
+				margin-left:45px;
+			}
 			@keyframes showtext
 			{
 				0%   {font-size:0;}
-				100%   {font-size:15;}
+				100%   {font-size:33;}
 			}
 
+  			.head0{
+				overflow:hidden;
+				position:absolute;top:50%;right:0px;border-radius:50%;transform:translateY(-50%);
+				height:45px;
+			}
+  			.head1{
+				overflow:hidden;
+				position:absolute;top:50%;left:0px;border-radius:50%;transform:translateY(-50%);
+				height:45px;
+			}
   			.showinghead{
 				animation: showhead 1s linear 0s forwards;
-				position:relative;
-				word-wrap:break-word;height:55px;left:50%;transform:translateX(-50%);overflow:hidden;
 			}
 			
 			@keyframes showhead
 			{
 				0%   {height:0px;}
-				100%   {height:55px;}
+				100%   {height:45px;}
 			}
 
-  			.first {
-				display:none;height:100%;width:33%;vertical-align:middle;text-align:center;overflow:hidden;
-			}
-			.second {
-				display:table-cell;height:100%;width:100%;vertical-align:middle;text-align:center;overflow:hidden;
-			}
-			@media ( min-aspect-ratio : 1/6) {
-				.first {
-					display:table-cell;height:100%;width:33%;vertical-align:middle;text-align:center;overflow:hidden;
-				}
-				.second {
-					display:table-cell;height:100%;width:33%;vertical-align:middle;text-align:center;overflow:hidden;
-				}
-			}
 		</style>
 		<script type="text/javascript" src="../3rdjs/jquery-3.3.1.min.js"></script>
 		<script type="text/javascript" src="myjs/core.js"></script>
 		<script type="text/javascript">
 		function init(){
-			if ($(document).height()>$(document).width()){
-				$("#heartdiv").css("width",$(document).width());
-				$("#heartdiv").css("height",$(document).width());
-				
-			} else {
-				$("#heartdiv").css("width",$(document).height());
-				$("#heartdiv").css("height",$(document).height());
+			var heartdivwidth =$(document).width()*0.8;
+			if ($(document).width()>$(document).height()){
+				heartdivwidth =$(document).height()*0.8;
 			}
+			$("#heartdiv").css("width",heartdivwidth*1.2+"px");
+			$("#heartdiv").css("height",heartdivwidth+"px");
+			
+			$("#heartleft").css("border-top-left-radius",heartdivwidth*0.9+"px");
+			$("#heartleft").css("border-top-right-radius",heartdivwidth*0.4+"px");
+			$("#heartleft").css("border-bottom-left-radius",heartdivwidth*1.5+"px");
+			$("#heartright").css("border-top-left-radius",heartdivwidth*0.4+"px");
+			$("#heartright").css("border-top-right-radius",heartdivwidth*0.9+"px");
+			$("#heartright").css("border-bottom-right-radius",heartdivwidth*1.5+"px");
+			
 			if (window.location.href.split("?").length!=2){
 				alert("非法访问，请重新扫码！");
 			} else {
@@ -124,29 +136,24 @@
 			if (index>=data.texts.length){
 				setTimeout(requestext,3000);
 			} else {
-				while (!$("#col"+col).is(":visible")){
-					col = col+1;
-					if (col>=2){
-						col = 0;
-					}
-					sessionStorage.setItem("col",""+col);
-				}
 				if ($("#col"+col).children().length<2){
-					$("#col"+col).append("<div class='showinghead'><img src='"+data.texts[index].head+"' style='height:100%;border-radius:50%;'/>"+
-							"<font class='showingtext floatfont'>"+data.texts[index].text+"</font></div>");
+					$("#col"+col).append("<div class='floating'><img class='head"+col+" showinghead' src='"+data.texts[index].head+"'/>"+
+							"<div class='text"+col+" showingtext'>"+data.texts[index].text+"</div></div>");
 				} else {
-					$("#col"+col).children().eq(Math.floor($("#col"+col).children().length/2)).before("<div class='showinghead'><img src='"+data.texts[index].head+"' style='height:100%;border-radius:50%;'/>"+
-						"<font class='showingtext floatfont'>"+data.texts[index].text+"</font></div>");
-					if ($("#col"+col).children().length*55>$("#heartdiv").height()){
-						$("#texts").animate({"top":-1*($("#col"+col).children().length*55-$("#heartdiv").height())/2},1000);
-					}
+					$("#col"+col).children().eq(Math.floor($("#col"+col).children().length/2)).before("<div class='floating'><img class='head"+col+" showinghead' src='"+data.texts[index].head+"'/>"+
+						"<div class='text"+col+" showingtext'>"+data.texts[index].text+"</div></div>");
 				}
+				$("#col"+col).animate({"top":-1*($("#col"+col).height()-$("#heartdiv").height())/2},1000);
+				col = col+1;
+				if (col>=2){
+					col = 0;
+				}
+				sessionStorage.setItem("col",""+col);
+				sessionStorage.setItem("index",""+(parseInt(sessionStorage.getItem("index"))+1));
+				
 				setTimeout(function(){
-					$(".showinghead").addClass("floating");
-					$(".showinghead").removeClass("showinghead");
 					$(".showingtext").removeClass("showingtext");
-					sessionStorage.setItem("index",""+(parseInt(sessionStorage.getItem("index"))+1));
-					sessionStorage.setItem("col",""+(parseInt(sessionStorage.getItem("col"))+1));
+					$(".showinghead").removeClass("showinghead");
 					showtext();
 				},1000+Math.floor((Math.random()*200)))
 			}
@@ -154,16 +161,16 @@
 		</script>
 	</head>
 	<body style="position:fixed;top:0px;left:0px;right:0px;bottom:0px;overflow:hidden;font:20px Arial;color:#fff;text-align:center;background:#000;margin:0px;">
-		<div id="heartdiv" style="position:absolute;top:50%;left:50%;transform:translateX(-50%) translateY(-50%);overflow:hidden;background:#e94437;">
-			<div id="texts" style="position:absolute;width:100%;height:100%;">
-				<table style="width:100%;height:100%;border-collapse:collapse;"><tr>
-				<td id="col0" class="first">
-				</td>
-				<td id="col1" class="second">
-				</td>
-				</tr></table>
+		<img src="images/moon.jpg" style="position:absolute;left:0px;top:0px;width:100%;height:100%;"/>
+		<div id="heartdiv" style="position:absolute;top:50%;left:50%;transform:translateX(-50%) translateY(-50%);">
+			<div id="heartleft" style="position:absolute;top:0px;left:0px;right:50%;bottom:0px;background:#e94437;overflow:hidden;">
+				<div id="col0" style="position:absolute;width:100%;">
+				</div>				
 			</div>
-			<img id="heart" src="images/bg.png" style="position:absolute;left:0px;right:0px;width:100%;height:100%;"/>
+			<div id="heartright" style="position:absolute;top:0px;left:50%;right:0px;bottom:0px;background:#e94437;overflow:hidden;">
+				<div id="col1" style="position:absolute;width:100%;">
+				</div>				
+			</div>
 		</div>
 	</body>
 </html>	
