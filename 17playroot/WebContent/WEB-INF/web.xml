@@ -22,6 +22,17 @@
     <filter-name>share</filter-name>
     <url-pattern>/share/*</url-pattern>
   </filter-mapping>
+
+    <filter>
+    <filter-name>text</filter-name>
+    <filter-class>
+	 	com.lsid.play.filter.Text
+	</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>text</filter-name>
+    <url-pattern>/text/*</url-pattern>
+  </filter-mapping>
   
   <filter>
     <filter-name>secure</filter-name>
