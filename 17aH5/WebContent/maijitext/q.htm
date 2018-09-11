@@ -1,0 +1,169 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
+		<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<meta name="mobileoptimized" content="0"/>
+		<title>大屏麦吉2018中秋</title>
+		<meta name="description" content="大屏麦吉2018中秋" />
+  		<meta name="Keywords" content="大屏麦吉2018中秋" />
+  		<style type="text/css">
+  			.floatfont{
+  				position:relative;bottom:40%;line-height:18px;
+  			}
+  			.floating{
+				animation: float 3s linear 0s infinite;
+				position:relative;
+				word-wrap:break-word;height:55px;left:50%;transform:translateX(-50%);overflow:hidden;
+			}
+			
+			@keyframes float
+			{
+				0%   {font-size:15;}
+				50%   {font-size:13;}
+				100%   {font-size:15;}
+			}
+
+  			.showingtext{
+				animation: showtext 1s linear 0s forwards;
+			}
+			
+			@keyframes showtext
+			{
+				0%   {font-size:0;}
+				100%   {font-size:15;}
+			}
+
+  			.showinghead{
+				animation: showhead 1s linear 0s forwards;
+				position:relative;
+				word-wrap:break-word;height:55px;left:50%;transform:translateX(-50%);overflow:hidden;
+			}
+			
+			@keyframes showhead
+			{
+				0%   {height:0px;}
+				100%   {height:55px;}
+			}
+
+  			.first {
+				display:none;height:100%;width:33%;vertical-align:middle;text-align:center;overflow:hidden;
+			}
+			.second {
+				display:table-cell;height:100%;width:100%;vertical-align:middle;text-align:center;overflow:hidden;
+			}
+			@media ( min-aspect-ratio : 1/6) {
+				.first {
+					display:table-cell;height:100%;width:33%;vertical-align:middle;text-align:center;overflow:hidden;
+				}
+				.second {
+					display:table-cell;height:100%;width:33%;vertical-align:middle;text-align:center;overflow:hidden;
+				}
+			}
+		</style>
+		<script type="text/javascript" src="../3rdjs/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="myjs/core.js"></script>
+		<script type="text/javascript">
+		function init(){
+			if ($(document).height()>$(document).width()){
+				$("#heartdiv").css("width",$(document).width());
+				$("#heartdiv").css("height",$(document).width());
+				
+			} else {
+				$("#heartdiv").css("width",$(document).height());
+				$("#heartdiv").css("height",$(document).height());
+			}
+			if (window.location.href.split("?").length!=2){
+				alert("非法访问，请重新扫码！");
+			} else {
+				var queryrow = "";
+				var eid = "";
+				var params = window.location.href.split("?")[1].split("&");
+				for (var i=0;i<params.length;i++){
+					if (params[i].split("=")[0]=="queryrow"){
+						queryrow = params[i].split("=")[1];
+					} else if (params[i].split("=")[0]=="eid"){
+						eid = params[i].split("=")[1];
+					} 
+				}
+				if (queryrow==""||eid==""){
+					alert("非法访问，请重新扫码！");
+				} else {
+					sessionStorage.setItem("queryrow",queryrow);
+					sessionStorage.setItem("eid",eid);
+					sessionStorage.setItem("col","0");
+					requestext();
+				}
+			}
+		}
+		function requestext(){
+			var params = {"eid":sessionStorage.getItem("eid"),"queryrow":sessionStorage.getItem("queryrow")};
+			if (sessionStorage.getItem("textstart")!=null){
+				params.textstart = sessionStorage.getItem("textstart");
+			}
+			if (sessionStorage.getItem("numoftexts")!=null){
+				params.numoftexts = sessionStorage.getItem("numoftexts");
+			}
+			post(null, params, responsetext);
+		}
+		function responsetext(data){
+			if (data.result=="success"){
+				sessionStorage.setItem("textstart",data.textstart);
+				sessionStorage.setItem("numoftexts",10);
+				sessionStorage.setItem("data",JSON.stringify(data));
+				sessionStorage.setItem("index","0");
+				
+				showtext();
+			} else {
+				alert("系统异常["+JSON.stringify(data)+"]");
+			}
+		}
+		function showtext(){
+			var data = JSON.parse(sessionStorage.getItem("data"));
+			var index = parseInt(sessionStorage.getItem("index"));
+			var col = parseInt(sessionStorage.getItem("col"));
+			if (index>=data.texts.length){
+				setTimeout(requestext,3000);
+			} else {
+				while (!$("#col"+col).is(":visible")){
+					col = col+1;
+					if (col>=2){
+						col = 0;
+					}
+					sessionStorage.setItem("col",""+col);
+				}
+				if ($("#col"+col).children().length<2){
+					$("#col"+col).append("<div class='showinghead'><img src='"+data.texts[index].head+"' style='height:100%;border-radius:50%;'/>"+
+							"<font class='showingtext floatfont'>"+data.texts[index].text+"</font></div>");
+				} else {
+					$("#col"+col).children().eq(Math.floor($("#col"+col).children().length/2)).before("<div class='showinghead'><img src='"+data.texts[index].head+"' style='height:100%;border-radius:50%;'/>"+
+						"<font class='showingtext floatfont'>"+data.texts[index].text+"</font></div>");
+					if ($("#col"+col).children().length*55>$("#heartdiv").height()){
+						$("#texts").animate({"top":-1*($("#col"+col).children().length*55-$("#heartdiv").height())/2},1000);
+					}
+				}
+				setTimeout(function(){
+					$(".showinghead").addClass("floating");
+					$(".showinghead").removeClass("showinghead");
+					$(".showingtext").removeClass("showingtext");
+					sessionStorage.setItem("index",""+(parseInt(sessionStorage.getItem("index"))+1));
+					sessionStorage.setItem("col",""+(parseInt(sessionStorage.getItem("col"))+1));
+					showtext();
+				},1000+Math.floor((Math.random()*200)))
+			}
+		}
+		</script>
+	</head>
+	<body style="position:fixed;top:0px;left:0px;right:0px;bottom:0px;overflow:hidden;font:20px Arial;color:#fff;text-align:center;background:#000;margin:0px;">
+		<div id="heartdiv" style="position:absolute;top:50%;left:50%;transform:translateX(-50%) translateY(-50%);overflow:hidden;background:#e94437;">
+			<div id="texts" style="position:absolute;width:100%;height:100%;">
+				<table style="width:100%;height:100%;border-collapse:collapse;"><tr>
+				<td id="col0" class="first">
+				</td>
+				<td id="col1" class="second">
+				</td>
+				</tr></table>
+			</div>
+			<img id="heart" src="images/bg.png" style="position:absolute;left:0px;right:0px;width:100%;height:100%;"/>
+		</div>
+	</body>
+</html>	
